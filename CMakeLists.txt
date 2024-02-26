@@ -3,8 +3,13 @@ project(miniClex)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(miniClex main.cpp
-        source/lexer.cpp
-        headers/lexer.h
-        source/lexicalGraph.cpp
-        headers/lexicalGraph.h)
+set(SOURCE_FILES main.cpp)
+
+add_executable(miniClex_run ${SOURCE_FILES})
+
+include_directories(lexer_lib)
+add_subdirectory(lexer_lib)
+
+target_link_libraries(miniClex_run lexer_lib)
+
+add_subdirectory(lexer_lib/google_tests)
