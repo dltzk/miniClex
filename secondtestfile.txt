@@ -1,0 +1,10 @@
+int main (int a, int b) {
+    int c = 321;
+    if (a >= b) {
+        c = 43;
+    } else {
+        c = 2 * a;
+    }
+    out(a);
+    out(b);
+}
