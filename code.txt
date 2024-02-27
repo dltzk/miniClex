@@ -1,9 +1,1 @@
-int main (int a, int b) {
-    int c = 123;
-    if (a < b) {
-        c = a;
-    } else {
-        c = 2 * b;
-    }
-    out(c);
-}
+3 * 2 * 3 + 2 * 4 * 4
