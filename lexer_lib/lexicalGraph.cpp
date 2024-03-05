@@ -28,6 +28,7 @@ map<int, vector<Container>> LexemMachine = {
                      {"\"", true, false, 18, ""},
                      {"letter", false, false, 21, ""},
                      {"-", true, true, 22, ""},
+                     {"\n", true, false, 0, ""},
                      {"digit", false, false, 23, ""},
                      {"eof", false, false, -1, "end"},
                      {"default", false, false, -1, "error"}
@@ -59,14 +60,14 @@ map<int, vector<Container>> LexemMachine = {
              }},
         {6, {
                      {"=", false, false, 7, ""},
-                     {"default", true, false, 0, "opassign"}
+                     {"default", false, false, 0, "opassign"}
              }},
         {7, {
                      {"default", true, false, 0, "opeq"}
              }},
         {8, {
                      {"+", false, false, 9, ""},
-                     {"default", true, false, 0, "opplus"}
+                     {"default", false, false, 0, "opplus"}
              }},
         {9, {
                      {"default", true, false, 0, "opinc"}
@@ -94,19 +95,18 @@ map<int, vector<Container>> LexemMachine = {
              }},
         {16, {
                      {"'", false, false, 17, ""},
-                     {"default", false, false, -1, "error"}
+                     {"default", false, false, -1, "error", true}
              }},
         {17, {
                      {"default", true, false, 0, "char"}
              }},
         {18, {
                      {"\"", false, false, 20, ""},
-                     {"\n", false, false, 19, ""},
                      {"eof", false, false, 19, ""},
                      {"default", true, true, 18, ""}
              }},
         {19, {
-                     {"default", false, false, -1, "error"}
+                     {"default", false, false, -1, "error", true}
              }},
         {20, {
                      {"default", true, false, 0, "str"}
