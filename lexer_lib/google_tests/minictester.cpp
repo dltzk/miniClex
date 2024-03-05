@@ -2,7 +2,7 @@
 // Created by sr9000 on 02/03/24.
 //
 
-#include "../Lexer_lib/lexer.h"
+#include "lexer.h"
 #include <gtest/gtest.h>
 #include <sstream>
 #include <string>
