@@ -1,0 +1,14 @@
+# ninja log v5
+1	816	7313522271499777	CMakeFiles/miniClex_run.dir/main.cpp.obj	71b989ff18bddfc1
+4	2690	7313523063821094	lexer_lib/google_tests/CMakeFiles/google_tests_run.dir/minictester.cpp.obj	e5fed3a76d15e638
+12409	15722	7313523194114899	lexer_lib/google_tests/google_tests_run.exe	841d9ef54688c9eb
+6	9031	7313523127108167	lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj	ce8a95acb20eb56c
+9	1039	7313522273700277	lexer_lib/CMakeFiles/lexer_lib.dir/src/lexicalGraph.cpp.obj	94c9c3681b17b7ed
+3	1098	7313522274320404	lexer_lib/CMakeFiles/lexer_lib.dir/src/lexer.cpp.obj	72d296e251031ffe
+1099	1188	7313522275240613	lexer_lib/liblexer_lib.a	626eee0bf328300e
+8	2324	7313523060189399	lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj	8b67bf7d1b7e67b4
+1189	1301	7313522276340857	miniClex_run.exe	2f6b058763fca55b
+9033	12110	7313523158050290	lib/libgtest.a	a70b7af3d70105a3
+12110	12409	7313523161040961	lib/libgtest_main.a	fe5bc43d0eb65984
+5	1669	7313523788564822	lexer_lib/google_tests/CMakeFiles/LexerTesting.dir/minictester.cpp.obj	fe1b00a7798de1de
+1669	4933	7313523821161411	lexer_lib/google_tests/LexerTesting.exe	ef5541f7a80969d2
