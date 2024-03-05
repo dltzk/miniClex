@@ -1,54 +1,384 @@
-#include "gtest/gtest.h"
+//
+// Created by sr9000 on 02/03/24.
+//
+
 #include "../Lexer_lib/lexer.h"
-#include <iomanip>
+#include <gtest/gtest.h>
+#include <sstream>
+#include <string>
+#include <vector>
 
-std::vector<Lexem> first_answer = {{"keyword", "kwint"},{"id", "main"},{"lpar", ""},{"keyword", "kwint"},{"id", "a"},{"comma", ""},{"keyword", "kwint"},{"id", "b"},{"rpar", ""},{"lbrace", ""},{"keyword", "kwint"},{"id", "c"},{"opassign", ""},{"num", "321321321"},{"semicolon", ""},{"keyword", "kwif"},{"lpar", ""},{"id", "a"},{"oplt", ""},{"id", "b"},{"rpar", ""},{"lbrace", ""},{"id", "a"},{"opassign", ""},{"id", "b"},{"semicolon", ""},{"rbrace", ""},{"keyword", "kwelse"},{"lbrace", ""},{"id", "c"},{"opassign",""},{"num", "2"},{"opmul", ""},{"id", "b"},{"semicolon", ""},{"id", "b"},{"opassign", ""},{"num", "3"},{"opmul", ""},{"id", "c"},{"semicolon", ""},{"rbrace", ""},{"keyword", "kwout"},{"lpar", ""},{"id", "a"},{"rpar", ""},{"semicolon", ""},{"id", "a"},{"opassign", ""},{"num", "5"},{"semicolon", ""},{"rbrace", ""},{"end", ""}};
-std::vector<Lexem> second_answer = {{"keyword", "kwint"},{"id", "main"},{"lpar", ""},{"keyword", "kwint"},{"id", "a"},{"comma", ""},{"keyword", "kwint"},{"id", "b"},{"rpar", ""},{"lbrace", ""},{"keyword", "kwint"},{"id", "c"},{"opassign", ""},{"num", "321"},{"semicolon", ""},{"keyword", "kwif"},{"lpar", ""},{"id", "a"},{"opgt", ""},{"opassign", ""},{"id", "b"},{"rpar", ""},{"lbrace", ""},{"id", "c"},{"opassign", ""},{"num", "43"},{"semicolon", ""},{"rbrace", ""},{"keyword", "kwelse"},{"lbrace", ""},{"id", "c"},{"opassign", ""},{"num", "2"},{"opmul", ""},{"id", "a"},{"semicolon", ""},{"rbrace", ""},{"keyword", "kwout"},{"lpar",""},{"id", "a"},{"rpar", ""},{"semicolon", ""},{"keyword", "kwout"},{"lpar", ""},{"id", "b"},{"rpar", ""},{"semicolon",""},{"rbrace", ""},{"end", ""}};
-std::vector<Lexem> third_answer = {{"keyword", "kwint"},{"id", "a"},{"semicolon", ""},{"id", "arrr"},{"lbrace", ""},{"rbrace", ""},{"opplus", ""},{"opminus", ""},{"end", ""}};
+const Lexem LEX_EMPTY = { "", "" };
+const Lexem LEX_ERROR = { "error", "" };
+const Lexem LEX_EOF = { "end", "" };
 
-TEST(testSuit, Test1) {
-    Lexem lexem;
-    std::fstream streamline1(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\firsttestfile.txt)");
-    Lexer lexer(streamline1);
-    int i = 0;
-    while (true){
-        lexem = lexer.nextLexem();
-        EXPECT_EQ(lexem, first_answer[i]);
-        if (lexem.first == "error" or lexem.first == "end") {
-            break;
+namespace lex_tests {
+
+    TEST(CorrectCode, BasicProgram)
+    {
+        using namespace std;
+        string prog = R"(
+int main() {
+    return 0;
+}
+)";
+        vector<Lexem> correct = {
+            { "kwint", "" },
+            { "id", "main" },
+            { "lpar", "" },
+            { "rpar", "" },
+            { "lbrace", "" },
+            { "kwreturn", "" },
+            { "num", "0" },
+            { "semicolon", "" },
+            { "rbrace", "" },
+            LEX_EOF
+        };
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (auto&& lex : correct) {
+            EXPECT_EQ(lex, lexer.nextLexem());
         }
-        i++;
     }
-};
 
-TEST(testSuit, Test2) {
-    Lexem lexem;
-    std::fstream streamline1(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\secondtestfile.txt)");
-    Lexer lexer(streamline1);
-    int i = 0;
-    while (true){
-        lexem = lexer.nextLexem();
-        EXPECT_EQ(lexem, second_answer[i]);
-        if (lexem.first == "error" or lexem.first == "end") {
-            break;
-        }
-        i++;
-    }
-};
-
-TEST(testSuit, Test3) {
-    Lexem lexem;
-    std::fstream streamline1(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\thirdtestfile.txt)");
-    Lexer lexer(streamline1);
-    int i = 0;
-    while (true){
-        lexem = lexer.nextLexem();
-        EXPECT_EQ(lexem, third_answer[i]);
-        if (lexem.first == "error" or lexem.first == "end") {
-            break;
-        }
-        i++;
-    }
+    TEST(CorrectCode, ComplexProgram)
+    {
+        using namespace std;
+        string prog = R"(
+int fib(int n) {
+    if (n < 2) return n;
+    return fib(n - 1) + fib(n-2);
 }
 
+int is_even(int x) {
+    while (x > 0) x = x - 2;
+    return x == 0;
+}
 
+int main() {
+    int n;
+    in n;
+    for (int i = 0; i < n; i++) {
+        if (is_even(i)) {
+            out fib(i);
+        }
+    }
+    return 0;
+}
+)";
+        Lexem tokens[] = {
+            // int fib(int n) {
+            { "kwint", "" },
+            { "id", "fib" },
+            { "lpar", "" },
+            { "kwint", "" },
+            { "id", "n" },
+            { "rpar", "" },
+            { "lbrace", "" },
+
+            // if (n < 2) return n;
+            { "kwif", "" },
+            { "lpar", "" },
+            { "id", "n" },
+            { "oplt", "" },
+            { "num", "2" },
+            { "rpar", "" },
+            { "kwreturn", "" },
+            { "id", "n" },
+            { "semicolon", "" },
+
+            // return fib(n - 1)
+            { "kwreturn", "" },
+            { "id", "fib" },
+            { "lpar", "" },
+            { "id", "n" },
+            { "opminus", "" },
+            { "num", "1" },
+            { "rpar", "" },
+
+            //  + fib(n-2);
+            { "opplus", "" },
+            { "id", "fib" },
+            { "lpar", "" },
+            { "id", "n" },
+            { "num", "-2" },
+            { "rpar", "" },
+            { "semicolon", "" },
+
+            // }
+            { "rbrace", "" },
+
+            // int is_even(int x) {
+            { "kwint", "" },
+            { "id", "is_even" },
+            { "lpar", "" },
+            { "kwint", "" },
+            { "id", "x" },
+            { "rpar", "" },
+            { "lbrace", "" },
+
+            // while (x > 0)
+            { "kwwhile", "" },
+            { "lpar", "" },
+            { "id", "x" },
+            { "opgt", "" },
+            { "num", "0" },
+            { "rpar", "" },
+
+            // x = x - 2;
+            { "id", "x" },
+            { "opassign", "" },
+            { "id", "x" },
+            { "opminus", "" },
+            { "num", "2" },
+            { "semicolon", "" },
+
+            //    return x == 0;
+            { "kwreturn", "" },
+            { "id", "x" },
+            { "opeq", "" },
+            { "num", "0" },
+            { "semicolon", "" },
+
+            //}
+            { "rbrace", "" },
+            // int main() {
+            { "kwint", "" },
+            { "id", "main" },
+            { "lpar", "" },
+            { "rpar", "" },
+            { "lbrace", "" },
+
+            //    int n;
+            { "kwint", "" },
+            { "id", "n" },
+            { "semicolon", "" },
+
+            //    in n;
+            { "kwin", "" },
+            { "id", "n" },
+            { "semicolon", "" },
+
+            //    for (int i = 0;
+            { "kwfor", "" },
+            { "lpar", "" },
+            { "kwint", "" },
+            { "id", "i" },
+            { "opassign", "" },
+            { "num", "0" },
+            { "semicolon", "" },
+
+            //  i < n; i++) {
+            { "id", "i" },
+            { "oplt", "" },
+            { "id", "n" },
+            { "semicolon", "" },
+
+            { "id", "i" },
+            { "opinc", "" },
+            { "rpar", "" },
+            { "lbrace", "" },
+
+            //        if (is_even(i)) {
+            { "kwif", "" },
+            { "lpar", "" },
+            { "id", "is_even" },
+            { "lpar", "" },
+            { "id", "i" },
+            { "rpar", "" },
+            { "rpar", "" },
+            { "lbrace", "" },
+
+            //            out fib(i);
+            { "kwout", "" },
+            { "id", "fib" },
+            { "lpar", "" },
+            { "id", "i" },
+            { "rpar", "" },
+            { "semicolon", "" },
+
+            //        }
+            { "rbrace", "" },
+            //    }
+            { "rbrace", "" },
+
+            //    return 0;
+            { "kwreturn", "" },
+            { "num", "0" },
+            { "semicolon", "" },
+
+            //}
+            { "rbrace", "" },
+            LEX_EOF
+        };
+
+        vector<Lexem> correct(begin(tokens), end(tokens));
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (int i = 0; i < correct.size(); ++i) {
+            EXPECT_EQ(correct[i], lexer.nextLexem()) << "token #" << i;
+        }
+    }
+
+    TEST(TrickyCode, BasicProgram)
+    {
+        using namespace std;
+        string prog = "int main(){return 0;}";
+        vector<Lexem> correct = {
+            { "kwint", "" },
+            { "id", "main" },
+            { "lpar", "" },
+            { "rpar", "" },
+            { "lbrace", "" },
+            { "kwreturn", "" },
+            { "num", "0" },
+            { "semicolon", "" },
+            { "rbrace", "" },
+            LEX_EOF
+        };
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (auto&& lex : correct) {
+            EXPECT_EQ(lex, lexer.nextLexem());
+        }
+    }
+
+    TEST(TrickyCode, MultilineString)
+    {
+        using namespace std;
+        string prog = R"(out "Hello
+world
+'
+for everyone!!!
+")";
+        string content = "Hello\n"
+            "world\n"
+            "'\n"
+            "for everyone!!!\n";
+        vector<Lexem> correct = {
+            { "kwout", "" },
+            { "str", content },
+            LEX_EOF
+        };
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (auto&& lex : correct) {
+            EXPECT_EQ(lex, lexer.nextLexem());
+        }
+    }
+
+    TEST(TrickyCode, Expressions)
+    {
+        using namespace std;
+        string prog = "int a=0;int aa=182;out aa+a==-123;";
+        vector<Lexem> correct = {
+            // int a=0;
+            { "kwint", "" },
+            { "id", "a" },
+            { "opassign", "" },
+            { "num", "0" },
+            { "semicolon", "" },
+
+            // int aa=182;
+            { "kwint", "" },
+            { "id", "aa" },
+            { "opassign", "" },
+            { "num", "182" },
+            { "semicolon", "" },
+
+            // out aa+a==-123;
+            { "kwout", "" },
+            { "id", "aa" },
+            { "opplus", "" },
+            { "id", "a" },
+            { "opeq", "" },
+            { "num", "-123" },
+            { "semicolon", "" },
+            LEX_EOF
+        };
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (auto&& lex : correct) {
+            EXPECT_EQ(lex, lexer.nextLexem());
+        }
+    }
+
+    TEST(ErrorCode, BadString)
+    {
+        using namespace std;
+        string prog = R"(out "incomplete string;)";
+        vector<Lexem> correct = {
+            { "kwout", "" },
+            LEX_ERROR,
+        };
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (auto&& lex : correct) {
+            EXPECT_EQ(lex, lexer.nextLexem());
+        }
+    }
+
+    TEST(ErrorCode, EmptyChar)
+    {
+        using namespace std;
+        string prog = R"(out '')";
+        vector<Lexem> correct = {
+            { "kwout", "" },
+            LEX_ERROR,
+        };
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (auto&& lex : correct) {
+            EXPECT_EQ(lex, lexer.nextLexem());
+        }
+    }
+
+    TEST(ErrorCode, DoubleChar)
+    {
+        using namespace std;
+        string prog = R"(out 'xy')";
+        vector<Lexem> correct = {
+            { "kwout", "" },
+            LEX_ERROR,
+        };
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (auto&& lex : correct) {
+            EXPECT_EQ(lex, lexer.nextLexem());
+        }
+    }
+
+    TEST(ErrorCode, SingleOperator)
+    {
+        using namespace std;
+        string prog = R"(a | b)";
+        vector<Lexem> correct = {
+            { "id", "a" },
+            LEX_ERROR,
+        };
+
+        stringstream stream{ prog };
+        Lexer lexer(stream);
+
+        for (auto&& lex : correct) {
+            EXPECT_EQ(lex, lexer.nextLexem());
+        }
+    }
+
+}
