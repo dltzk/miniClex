@@ -19,7 +19,7 @@ void Lexer::findLexem(vector<Container> graph, Lexem &lexem) {
             }
         }
         else if (edge.cache == "letter"){
-            if (isalpha(cache)){
+            if (isalpha(cache) or cache == '_') {
                 startedge = edge;
                 break;
             }
@@ -55,8 +55,7 @@ void Lexer::findLexem(vector<Container> graph, Lexem &lexem) {
         if (keywords.count(buffer)) {
 //            lexem.first = "kw" + buffer;
 //            lexem.second = "";
-            lexem.first = "keyword";
-            lexem.second = "kw" + buffer;
+            lexem.first = "kw" + buffer;
         } else {
             lexem.first = "id";
             lexem.second = buffer;
