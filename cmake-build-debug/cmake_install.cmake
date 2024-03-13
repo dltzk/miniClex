@@ -49,7 +49,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/lexer_lib/google_tests/cmake_install.cmake")
+  include("C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/tests/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

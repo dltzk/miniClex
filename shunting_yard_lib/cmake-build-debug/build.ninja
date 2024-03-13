@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: shunting_yard_lib
+# Project: lex-lib
 # Configurations: Debug
 # =============================================================================
 
@@ -49,9 +49,9 @@ cmake_ninja_workdir = C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/shunting_yar
 
 build cmake_object_order_depends_target_shunting_yard_lib: phony || CMakeFiles/shunting_yard_lib.dir
 
-build CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.cpp.obj: CXX_COMPILER__shunting_yard_lib_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/shunting_yard_lib/src/shuntingYard.cpp || cmake_object_order_depends_target_shunting_yard_lib
-  DEP_FILE = CMakeFiles\shunting_yard_lib.dir\src\shuntingYard.cpp.obj.d
-  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+build CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.obj: CXX_COMPILER__shunting_yard_lib_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/shunting_yard_lib/src/shuntingYard.cpp || cmake_object_order_depends_target_shunting_yard_lib
+  DEP_FILE = CMakeFiles\shunting_yard_lib.dir\src\shuntingYard.obj.d
+  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
   INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/include"
   OBJECT_DIR = CMakeFiles\shunting_yard_lib.dir
   OBJECT_FILE_DIR = CMakeFiles\shunting_yard_lib.dir\src
@@ -64,7 +64,7 @@ build CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.cpp.obj: CXX_COMPILER__s
 #############################################
 # Link the static library libshunting_yard_lib.a
 
-build libshunting_yard_lib.a: CXX_STATIC_LIBRARY_LINKER__shunting_yard_lib_Debug CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.cpp.obj
+build libshunting_yard_lib.a: CXX_STATIC_LIBRARY_LINKER__shunting_yard_lib_Debug CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.obj
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles\shunting_yard_lib.dir
   POST_BUILD = cd .
@@ -109,6 +109,11 @@ build shunting_yard_lib: phony libshunting_yard_lib.a
 # Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/cmake-build-debug
 
 build all: phony libshunting_yard_lib.a
+
+# =============================================================================
+# Unknown Build Time Dependencies.
+# Tell Ninja that they may appear as side effects of build rules
+# otherwise ordered by order-only dependencies.
 
 # =============================================================================
 # Built-in targets

@@ -47,12 +47,12 @@ cmake_ninja_workdir = C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/cmake-build-
 #############################################
 # Order-only phony target for miniClex_run
 
-build cmake_object_order_depends_target_miniClex_run: phony || cmake_object_order_depends_target_lexer_lib
+build cmake_object_order_depends_target_miniClex_run: phony || cmake_object_order_depends_target_lexer_lib cmake_object_order_depends_target_shunting_yard_lib
 
 build CMakeFiles/miniClex_run.dir/main.cpp.obj: CXX_COMPILER__miniClex_run_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/main.cpp || cmake_object_order_depends_target_miniClex_run
   DEP_FILE = CMakeFiles\miniClex_run.dir\main.cpp.obj.d
-  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/include"
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/include" -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/include"
   OBJECT_DIR = CMakeFiles\miniClex_run.dir
   OBJECT_FILE_DIR = CMakeFiles\miniClex_run.dir
 
@@ -64,9 +64,9 @@ build CMakeFiles/miniClex_run.dir/main.cpp.obj: CXX_COMPILER__miniClex_run_unsca
 #############################################
 # Link the executable miniClex_run.exe
 
-build miniClex_run.exe: CXX_EXECUTABLE_LINKER__miniClex_run_Debug CMakeFiles/miniClex_run.dir/main.cpp.obj | lexer_lib/liblexer_lib.a || lexer_lib/liblexer_lib.a
+build miniClex_run.exe: CXX_EXECUTABLE_LINKER__miniClex_run_Debug CMakeFiles/miniClex_run.dir/main.cpp.obj | lexer_lib/liblexer_lib.a shunting_yard_lib/libshunting_yard_lib.a lexer_lib/liblexer_lib.a || lexer_lib/liblexer_lib.a shunting_yard_lib/libshunting_yard_lib.a
   FLAGS = -g
-  LINK_LIBRARIES = lexer_lib/liblexer_lib.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = lexer_lib/liblexer_lib.a  shunting_yard_lib/libshunting_yard_lib.a  lexer_lib/liblexer_lib.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\miniClex_run.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -260,12 +260,12 @@ build lexer_lib/install/strip: phony lexer_lib/CMakeFiles/install/strip.util
 #############################################
 # Order-only phony target for shunting_yard_lib
 
-build cmake_object_order_depends_target_shunting_yard_lib: phony || shunting_yard_lib/CMakeFiles/shunting_yard_lib.dir
+build cmake_object_order_depends_target_shunting_yard_lib: phony || cmake_object_order_depends_target_lexer_lib
 
 build shunting_yard_lib/CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.cpp.obj: CXX_COMPILER__shunting_yard_lib_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/shunting_yard_lib/src/shuntingYard.cpp || cmake_object_order_depends_target_shunting_yard_lib
   DEP_FILE = shunting_yard_lib\CMakeFiles\shunting_yard_lib.dir\src\shuntingYard.cpp.obj.d
-  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/include"
+  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/include" -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/include"
   OBJECT_DIR = shunting_yard_lib\CMakeFiles\shunting_yard_lib.dir
   OBJECT_FILE_DIR = shunting_yard_lib\CMakeFiles\shunting_yard_lib.dir\src
 
@@ -277,7 +277,7 @@ build shunting_yard_lib/CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.cpp.ob
 #############################################
 # Link the static library shunting_yard_lib\libshunting_yard_lib.a
 
-build shunting_yard_lib/libshunting_yard_lib.a: CXX_STATIC_LIBRARY_LINKER__shunting_yard_lib_Debug shunting_yard_lib/CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.cpp.obj
+build shunting_yard_lib/libshunting_yard_lib.a: CXX_STATIC_LIBRARY_LINKER__shunting_yard_lib_Debug shunting_yard_lib/CMakeFiles/shunting_yard_lib.dir/src/shuntingYard.cpp.obj || lexer_lib/liblexer_lib.a
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = shunting_yard_lib\CMakeFiles\shunting_yard_lib.dir
   POST_BUILD = cd .
@@ -356,177 +356,185 @@ build shunting_yard_lib/install/strip: phony shunting_yard_lib/CMakeFiles/instal
 # =============================================================================
 
 # =============================================================================
-# Object build statements for EXECUTABLE target LexerTesting
+# Object build statements for EXECUTABLE target tests
 
 
 #############################################
-# Order-only phony target for LexerTesting
+# Order-only phony target for tests
 
-build cmake_object_order_depends_target_LexerTesting: phony || cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main cmake_object_order_depends_target_lexer_lib
+build cmake_object_order_depends_target_tests: phony || cmake_object_order_depends_target_gtest cmake_object_order_depends_target_gtest_main cmake_object_order_depends_target_lexer_lib cmake_object_order_depends_target_shunting_yard_lib
 
-build lexer_lib/google_tests/CMakeFiles/LexerTesting.dir/minictester.cpp.obj: CXX_COMPILER__LexerTesting_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/minictester.cpp || cmake_object_order_depends_target_LexerTesting
-  DEP_FILE = lexer_lib\google_tests\CMakeFiles\LexerTesting.dir\minictester.cpp.obj.d
-  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
-  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest"
-  OBJECT_DIR = lexer_lib\google_tests\CMakeFiles\LexerTesting.dir
-  OBJECT_FILE_DIR = lexer_lib\google_tests\CMakeFiles\LexerTesting.dir
+build tests/CMakeFiles/tests.dir/minictester.cpp.obj: CXX_COMPILER__tests_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/tests/minictester.cpp || cmake_object_order_depends_target_tests
+  DEP_FILE = tests\CMakeFiles\tests.dir\minictester.cpp.obj.d
+  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/include" -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest"
+  OBJECT_DIR = tests\CMakeFiles\tests.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\tests.dir
+
+build tests/CMakeFiles/tests.dir/shunting-yard-tests.cpp.obj: CXX_COMPILER__tests_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/tests/shunting-yard-tests.cpp || cmake_object_order_depends_target_tests
+  DEP_FILE = tests\CMakeFiles\tests.dir\shunting-yard-tests.cpp.obj.d
+  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/include" -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest"
+  OBJECT_DIR = tests\CMakeFiles\tests.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\tests.dir
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target LexerTesting
+# Link build statements for EXECUTABLE target tests
 
 
 #############################################
-# Link the executable lexer_lib\google_tests\LexerTesting.exe
+# Link the executable tests\tests.exe
 
-build lexer_lib/google_tests/LexerTesting.exe: CXX_EXECUTABLE_LINKER__LexerTesting_Debug lexer_lib/google_tests/CMakeFiles/LexerTesting.dir/minictester.cpp.obj | lexer_lib/liblexer_lib.a lib/libgtest.a lib/libgtest_main.a lib/libgtest.a || lexer_lib/liblexer_lib.a lib/libgtest.a lib/libgtest_main.a
+build tests/tests.exe tests/tests[1]_tests.cmake | ${cmake_ninja_workdir}tests/tests[1]_tests.cmake: CXX_EXECUTABLE_LINKER__tests_Debug tests/CMakeFiles/tests.dir/minictester.cpp.obj tests/CMakeFiles/tests.dir/shunting-yard-tests.cpp.obj | lexer_lib/liblexer_lib.a shunting_yard_lib/libshunting_yard_lib.a lib/libgtest_main.a lexer_lib/liblexer_lib.a lib/libgtest.a || lexer_lib/liblexer_lib.a lib/libgtest.a lib/libgtest_main.a shunting_yard_lib/libshunting_yard_lib.a
   FLAGS = -g
-  LINK_LIBRARIES = lexer_lib/liblexer_lib.a  lib/libgtest.a  lib/libgtest_main.a  lib/libgtest.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  OBJECT_DIR = lexer_lib\google_tests\CMakeFiles\LexerTesting.dir
-  POST_BUILD = cd .
+  LINK_LIBRARIES = lexer_lib/liblexer_lib.a  shunting_yard_lib/libshunting_yard_lib.a  lib/libgtest_main.a  lexer_lib/liblexer_lib.a  lib/libgtest.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  OBJECT_DIR = tests\CMakeFiles\tests.dir
+  POST_BUILD = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -D TEST_TARGET=tests -D "TEST_EXECUTABLE=C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/tests/tests.exe" -D TEST_EXECUTOR= -D "TEST_WORKING_DIR=C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/tests" -D TEST_EXTRA_ARGS= -D TEST_PROPERTIES= -D TEST_PREFIX= -D TEST_SUFFIX= -D TEST_FILTER= -D NO_PRETTY_TYPES=FALSE -D NO_PRETTY_VALUES=FALSE -D TEST_LIST=tests_TESTS -D "CTEST_FILE=C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/tests/tests[1]_tests.cmake" -D TEST_DISCOVERY_TIMEOUT=5 -D TEST_XML_OUTPUT_DIR= -P "C:/Program Files/JetBrains/CLion 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/GoogleTestAddTests.cmake""
   PRE_LINK = cd .
-  TARGET_FILE = lexer_lib\google_tests\LexerTesting.exe
-  TARGET_IMPLIB = lexer_lib\google_tests\libLexerTesting.dll.a
-  TARGET_PDB = LexerTesting.exe.dbg
+  RESTAT = 1
+  TARGET_FILE = tests\tests.exe
+  TARGET_IMPLIB = tests\libtests.dll.a
+  TARGET_PDB = tests.exe.dbg
 
 
 #############################################
 # Utility command for edit_cache
 
-build lexer_lib/google_tests/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+build tests/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build lexer_lib/google_tests/edit_cache: phony lexer_lib/google_tests/CMakeFiles/edit_cache.util
+build tests/edit_cache: phony tests/CMakeFiles/edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build lexer_lib/google_tests/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Juzo Suzuya\CLionProjects\miniClex" -B"C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug""
+build tests/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Juzo Suzuya\CLionProjects\miniClex" -B"C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug""
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/rebuild_cache: phony lexer_lib/google_tests/CMakeFiles/rebuild_cache.util
+build tests/rebuild_cache: phony tests/CMakeFiles/rebuild_cache.util
 
 
 #############################################
 # Utility command for list_install_components
 
-build lexer_lib/google_tests/list_install_components: phony
+build tests/list_install_components: phony
 
 
 #############################################
 # Utility command for install
 
-build lexer_lib/google_tests/CMakeFiles/install.util: CUSTOM_COMMAND lexer_lib/google_tests/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+build tests/CMakeFiles/install.util: CUSTOM_COMMAND tests/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/install: phony lexer_lib/google_tests/CMakeFiles/install.util
+build tests/install: phony tests/CMakeFiles/install.util
 
 
 #############################################
 # Utility command for install/local
 
-build lexer_lib/google_tests/CMakeFiles/install/local.util: CUSTOM_COMMAND lexer_lib/google_tests/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+build tests/CMakeFiles/install/local.util: CUSTOM_COMMAND tests/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/install/local: phony lexer_lib/google_tests/CMakeFiles/install/local.util
+build tests/install/local: phony tests/CMakeFiles/install/local.util
 
 
 #############################################
 # Utility command for install/strip
 
-build lexer_lib/google_tests/CMakeFiles/install/strip.util: CUSTOM_COMMAND lexer_lib/google_tests/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+build tests/CMakeFiles/install/strip.util: CUSTOM_COMMAND tests/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\tests" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
   DESC = Installing the project stripped...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/install/strip: phony lexer_lib/google_tests/CMakeFiles/install/strip.util
+build tests/install/strip: phony tests/CMakeFiles/install/strip.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/CMakeLists.txt
+# C:/Users/Juzo Suzuya/CLionProjects/miniClex/tests/CMakeLists.txt
 # =============================================================================
 
 
 #############################################
 # Utility command for edit_cache
 
-build lexer_lib/google_tests/lib/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+build _deps/googletest-build/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build lexer_lib/google_tests/lib/edit_cache: phony lexer_lib/google_tests/lib/CMakeFiles/edit_cache.util
+build _deps/googletest-build/edit_cache: phony _deps/googletest-build/CMakeFiles/edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build lexer_lib/google_tests/lib/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Juzo Suzuya\CLionProjects\miniClex" -B"C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug""
+build _deps/googletest-build/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Juzo Suzuya\CLionProjects\miniClex" -B"C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug""
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/rebuild_cache: phony lexer_lib/google_tests/lib/CMakeFiles/rebuild_cache.util
+build _deps/googletest-build/rebuild_cache: phony _deps/googletest-build/CMakeFiles/rebuild_cache.util
 
 
 #############################################
 # Utility command for list_install_components
 
-build lexer_lib/google_tests/lib/list_install_components: phony
+build _deps/googletest-build/list_install_components: phony
 
 
 #############################################
 # Utility command for install
 
-build lexer_lib/google_tests/lib/CMakeFiles/install.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+build _deps/googletest-build/CMakeFiles/install.util: CUSTOM_COMMAND _deps/googletest-build/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/install: phony lexer_lib/google_tests/lib/CMakeFiles/install.util
+build _deps/googletest-build/install: phony _deps/googletest-build/CMakeFiles/install.util
 
 
 #############################################
 # Utility command for install/local
 
-build lexer_lib/google_tests/lib/CMakeFiles/install/local.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+build _deps/googletest-build/CMakeFiles/install/local.util: CUSTOM_COMMAND _deps/googletest-build/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/install/local: phony lexer_lib/google_tests/lib/CMakeFiles/install/local.util
+build _deps/googletest-build/install/local: phony _deps/googletest-build/CMakeFiles/install/local.util
 
 
 #############################################
 # Utility command for install/strip
 
-build lexer_lib/google_tests/lib/CMakeFiles/install/strip.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+build _deps/googletest-build/CMakeFiles/install/strip.util: CUSTOM_COMMAND _deps/googletest-build/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
   DESC = Installing the project stripped...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/install/strip: phony lexer_lib/google_tests/lib/CMakeFiles/install/strip.util
+build _deps/googletest-build/install/strip: phony _deps/googletest-build/CMakeFiles/install/strip.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/CMakeLists.txt
+# C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/CMakeLists.txt
 # =============================================================================
 
 # =============================================================================
@@ -538,12 +546,12 @@ build lexer_lib/google_tests/lib/install/strip: phony lexer_lib/google_tests/lib
 
 build cmake_object_order_depends_target_gmock: phony || cmake_object_order_depends_target_gtest
 
-build lexer_lib/google_tests/lib/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj: CXX_COMPILER__gmock_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/src/gmock-all.cc || cmake_object_order_depends_target_gmock
-  DEP_FILE = lexer_lib\google_tests\lib\googlemock\CMakeFiles\gmock.dir\src\gmock-all.cc.obj.d
-  FLAGS = -g -std=c++20 -fdiagnostics-color=always -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
-  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/include" -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest"
-  OBJECT_DIR = lexer_lib\google_tests\lib\googlemock\CMakeFiles\gmock.dir
-  OBJECT_FILE_DIR = lexer_lib\google_tests\lib\googlemock\CMakeFiles\gmock.dir\src
+build _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj: CXX_COMPILER__gmock_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googlemock/src/gmock-all.cc || cmake_object_order_depends_target_gmock
+  DEP_FILE = _deps\googletest-build\googlemock\CMakeFiles\gmock.dir\src\gmock-all.cc.obj.d
+  FLAGS = -g -std=c++17 -fdiagnostics-color=always -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googlemock/include" -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googlemock" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest"
+  OBJECT_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock.dir
+  OBJECT_FILE_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock.dir\src
 
 
 # =============================================================================
@@ -553,9 +561,9 @@ build lexer_lib/google_tests/lib/googlemock/CMakeFiles/gmock.dir/src/gmock-all.c
 #############################################
 # Link the static library lib\libgmock.a
 
-build lib/libgmock.a: CXX_STATIC_LIBRARY_LINKER__gmock_Debug lexer_lib/google_tests/lib/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj || lib/libgtest.a
+build lib/libgmock.a: CXX_STATIC_LIBRARY_LINKER__gmock_Debug _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj || lib/libgtest.a
   LANGUAGE_COMPILE_FLAGS = -g
-  OBJECT_DIR = lexer_lib\google_tests\lib\googlemock\CMakeFiles\gmock.dir
+  OBJECT_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
   TARGET_FILE = lib\libgmock.a
@@ -570,12 +578,12 @@ build lib/libgmock.a: CXX_STATIC_LIBRARY_LINKER__gmock_Debug lexer_lib/google_te
 
 build cmake_object_order_depends_target_gmock_main: phony || cmake_object_order_depends_target_gmock cmake_object_order_depends_target_gtest
 
-build lexer_lib/google_tests/lib/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj: CXX_COMPILER__gmock_main_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/src/gmock_main.cc || cmake_object_order_depends_target_gmock_main
-  DEP_FILE = lexer_lib\google_tests\lib\googlemock\CMakeFiles\gmock_main.dir\src\gmock_main.cc.obj.d
-  FLAGS = -g -std=c++20 -fdiagnostics-color=always -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
-  INCLUDES = -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest"
-  OBJECT_DIR = lexer_lib\google_tests\lib\googlemock\CMakeFiles\gmock_main.dir
-  OBJECT_FILE_DIR = lexer_lib\google_tests\lib\googlemock\CMakeFiles\gmock_main.dir\src
+build _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj: CXX_COMPILER__gmock_main_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googlemock/src/gmock_main.cc || cmake_object_order_depends_target_gmock_main
+  DEP_FILE = _deps\googletest-build\googlemock\CMakeFiles\gmock_main.dir\src\gmock_main.cc.obj.d
+  FLAGS = -g -std=c++17 -fdiagnostics-color=always -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+  INCLUDES = -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googlemock/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googlemock" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest"
+  OBJECT_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock_main.dir
+  OBJECT_FILE_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock_main.dir\src
 
 
 # =============================================================================
@@ -585,9 +593,9 @@ build lexer_lib/google_tests/lib/googlemock/CMakeFiles/gmock_main.dir/src/gmock_
 #############################################
 # Link the static library lib\libgmock_main.a
 
-build lib/libgmock_main.a: CXX_STATIC_LIBRARY_LINKER__gmock_main_Debug lexer_lib/google_tests/lib/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj || lib/libgmock.a lib/libgtest.a
+build lib/libgmock_main.a: CXX_STATIC_LIBRARY_LINKER__gmock_main_Debug _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj || lib/libgmock.a lib/libgtest.a
   LANGUAGE_COMPILE_FLAGS = -g
-  OBJECT_DIR = lexer_lib\google_tests\lib\googlemock\CMakeFiles\gmock_main.dir
+  OBJECT_DIR = _deps\googletest-build\googlemock\CMakeFiles\gmock_main.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
   TARGET_FILE = lib\libgmock_main.a
@@ -597,70 +605,70 @@ build lib/libgmock_main.a: CXX_STATIC_LIBRARY_LINKER__gmock_main_Debug lexer_lib
 #############################################
 # Utility command for edit_cache
 
-build lexer_lib/google_tests/lib/googlemock/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+build _deps/googletest-build/googlemock/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build lexer_lib/google_tests/lib/googlemock/edit_cache: phony lexer_lib/google_tests/lib/googlemock/CMakeFiles/edit_cache.util
+build _deps/googletest-build/googlemock/edit_cache: phony _deps/googletest-build/googlemock/CMakeFiles/edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build lexer_lib/google_tests/lib/googlemock/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Juzo Suzuya\CLionProjects\miniClex" -B"C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug""
+build _deps/googletest-build/googlemock/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Juzo Suzuya\CLionProjects\miniClex" -B"C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug""
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/googlemock/rebuild_cache: phony lexer_lib/google_tests/lib/googlemock/CMakeFiles/rebuild_cache.util
+build _deps/googletest-build/googlemock/rebuild_cache: phony _deps/googletest-build/googlemock/CMakeFiles/rebuild_cache.util
 
 
 #############################################
 # Utility command for list_install_components
 
-build lexer_lib/google_tests/lib/googlemock/list_install_components: phony
+build _deps/googletest-build/googlemock/list_install_components: phony
 
 
 #############################################
 # Utility command for install
 
-build lexer_lib/google_tests/lib/googlemock/CMakeFiles/install.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/googlemock/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+build _deps/googletest-build/googlemock/CMakeFiles/install.util: CUSTOM_COMMAND _deps/googletest-build/googlemock/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/googlemock/install: phony lexer_lib/google_tests/lib/googlemock/CMakeFiles/install.util
+build _deps/googletest-build/googlemock/install: phony _deps/googletest-build/googlemock/CMakeFiles/install.util
 
 
 #############################################
 # Utility command for install/local
 
-build lexer_lib/google_tests/lib/googlemock/CMakeFiles/install/local.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/googlemock/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+build _deps/googletest-build/googlemock/CMakeFiles/install/local.util: CUSTOM_COMMAND _deps/googletest-build/googlemock/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/googlemock/install/local: phony lexer_lib/google_tests/lib/googlemock/CMakeFiles/install/local.util
+build _deps/googletest-build/googlemock/install/local: phony _deps/googletest-build/googlemock/CMakeFiles/install/local.util
 
 
 #############################################
 # Utility command for install/strip
 
-build lexer_lib/google_tests/lib/googlemock/CMakeFiles/install/strip.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/googlemock/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+build _deps/googletest-build/googlemock/CMakeFiles/install/strip.util: CUSTOM_COMMAND _deps/googletest-build/googlemock/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googlemock" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
   DESC = Installing the project stripped...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/googlemock/install/strip: phony lexer_lib/google_tests/lib/googlemock/CMakeFiles/install/strip.util
+build _deps/googletest-build/googlemock/install/strip: phony _deps/googletest-build/googlemock/CMakeFiles/install/strip.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/CMakeLists.txt
+# C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googlemock/CMakeLists.txt
 # =============================================================================
 
 # =============================================================================
@@ -670,14 +678,14 @@ build lexer_lib/google_tests/lib/googlemock/install/strip: phony lexer_lib/googl
 #############################################
 # Order-only phony target for gtest
 
-build cmake_object_order_depends_target_gtest: phony || lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest.dir
+build cmake_object_order_depends_target_gtest: phony || _deps/googletest-build/googletest/CMakeFiles/gtest.dir
 
-build lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj: CXX_COMPILER__gtest_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/src/gtest-all.cc || cmake_object_order_depends_target_gtest
-  DEP_FILE = lexer_lib\google_tests\lib\googletest\CMakeFiles\gtest.dir\src\gtest-all.cc.obj.d
-  FLAGS = -g -std=c++20 -fdiagnostics-color=always -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
-  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/include" -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest"
-  OBJECT_DIR = lexer_lib\google_tests\lib\googletest\CMakeFiles\gtest.dir
-  OBJECT_FILE_DIR = lexer_lib\google_tests\lib\googletest\CMakeFiles\gtest.dir\src
+build _deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj: CXX_COMPILER__gtest_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest/src/gtest-all.cc || cmake_object_order_depends_target_gtest
+  DEP_FILE = _deps\googletest-build\googletest\CMakeFiles\gtest.dir\src\gtest-all.cc.obj.d
+  FLAGS = -g -std=c++17 -fdiagnostics-color=always -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+  INCLUDES = -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest/include" -I"C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest"
+  OBJECT_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest.dir
+  OBJECT_FILE_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest.dir\src
 
 
 # =============================================================================
@@ -687,9 +695,9 @@ build lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest.dir/src/gtest-all.c
 #############################################
 # Link the static library lib\libgtest.a
 
-build lib/libgtest.a: CXX_STATIC_LIBRARY_LINKER__gtest_Debug lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj
+build lib/libgtest.a: CXX_STATIC_LIBRARY_LINKER__gtest_Debug _deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj
   LANGUAGE_COMPILE_FLAGS = -g
-  OBJECT_DIR = lexer_lib\google_tests\lib\googletest\CMakeFiles\gtest.dir
+  OBJECT_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
   TARGET_FILE = lib\libgtest.a
@@ -704,12 +712,12 @@ build lib/libgtest.a: CXX_STATIC_LIBRARY_LINKER__gtest_Debug lexer_lib/google_te
 
 build cmake_object_order_depends_target_gtest_main: phony || cmake_object_order_depends_target_gtest
 
-build lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj: CXX_COMPILER__gtest_main_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/src/gtest_main.cc || cmake_object_order_depends_target_gtest_main
-  DEP_FILE = lexer_lib\google_tests\lib\googletest\CMakeFiles\gtest_main.dir\src\gtest_main.cc.obj.d
-  FLAGS = -g -std=c++20 -fdiagnostics-color=always -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
-  INCLUDES = -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest"
-  OBJECT_DIR = lexer_lib\google_tests\lib\googletest\CMakeFiles\gtest_main.dir
-  OBJECT_FILE_DIR = lexer_lib\google_tests\lib\googletest\CMakeFiles\gtest_main.dir\src
+build _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj: CXX_COMPILER__gtest_main_unscanned_Debug C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest/src/gtest_main.cc || cmake_object_order_depends_target_gtest_main
+  DEP_FILE = _deps\googletest-build\googletest\CMakeFiles\gtest_main.dir\src\gtest_main.cc.obj.d
+  FLAGS = -g -std=c++17 -fdiagnostics-color=always -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+  INCLUDES = -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest/include" -isystem "C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-src/googletest"
+  OBJECT_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest_main.dir
+  OBJECT_FILE_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest_main.dir\src
 
 
 # =============================================================================
@@ -719,9 +727,9 @@ build lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest_main.dir/src/gtest_
 #############################################
 # Link the static library lib\libgtest_main.a
 
-build lib/libgtest_main.a: CXX_STATIC_LIBRARY_LINKER__gtest_main_Debug lexer_lib/google_tests/lib/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj || lib/libgtest.a
+build lib/libgtest_main.a: CXX_STATIC_LIBRARY_LINKER__gtest_main_Debug _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj || lib/libgtest.a
   LANGUAGE_COMPILE_FLAGS = -g
-  OBJECT_DIR = lexer_lib\google_tests\lib\googletest\CMakeFiles\gtest_main.dir
+  OBJECT_DIR = _deps\googletest-build\googletest\CMakeFiles\gtest_main.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
   TARGET_FILE = lib\libgtest_main.a
@@ -731,73 +739,69 @@ build lib/libgtest_main.a: CXX_STATIC_LIBRARY_LINKER__gtest_main_Debug lexer_lib
 #############################################
 # Utility command for edit_cache
 
-build lexer_lib/google_tests/lib/googletest/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+build _deps/googletest-build/googletest/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build lexer_lib/google_tests/lib/googletest/edit_cache: phony lexer_lib/google_tests/lib/googletest/CMakeFiles/edit_cache.util
+build _deps/googletest-build/googletest/edit_cache: phony _deps/googletest-build/googletest/CMakeFiles/edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build lexer_lib/google_tests/lib/googletest/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Juzo Suzuya\CLionProjects\miniClex" -B"C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug""
+build _deps/googletest-build/googletest/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S"C:\Users\Juzo Suzuya\CLionProjects\miniClex" -B"C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug""
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/googletest/rebuild_cache: phony lexer_lib/google_tests/lib/googletest/CMakeFiles/rebuild_cache.util
+build _deps/googletest-build/googletest/rebuild_cache: phony _deps/googletest-build/googletest/CMakeFiles/rebuild_cache.util
 
 
 #############################################
 # Utility command for list_install_components
 
-build lexer_lib/google_tests/lib/googletest/list_install_components: phony
+build _deps/googletest-build/googletest/list_install_components: phony
 
 
 #############################################
 # Utility command for install
 
-build lexer_lib/google_tests/lib/googletest/CMakeFiles/install.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/googletest/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
+build _deps/googletest-build/googletest/CMakeFiles/install.util: CUSTOM_COMMAND _deps/googletest-build/googletest/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/googletest/install: phony lexer_lib/google_tests/lib/googletest/CMakeFiles/install.util
+build _deps/googletest-build/googletest/install: phony _deps/googletest-build/googletest/CMakeFiles/install.util
 
 
 #############################################
 # Utility command for install/local
 
-build lexer_lib/google_tests/lib/googletest/CMakeFiles/install/local.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/googletest/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
+build _deps/googletest-build/googletest/CMakeFiles/install/local.util: CUSTOM_COMMAND _deps/googletest-build/googletest/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/googletest/install/local: phony lexer_lib/google_tests/lib/googletest/CMakeFiles/install/local.util
+build _deps/googletest-build/googletest/install/local: phony _deps/googletest-build/googletest/CMakeFiles/install/local.util
 
 
 #############################################
 # Utility command for install/strip
 
-build lexer_lib/google_tests/lib/googletest/CMakeFiles/install/strip.util: CUSTOM_COMMAND lexer_lib/google_tests/lib/googletest/all
-  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\lexer_lib\google_tests\lib\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
+build _deps/googletest-build/googletest/CMakeFiles/install/strip.util: CUSTOM_COMMAND _deps/googletest-build/googletest/all
+  COMMAND = cmd.exe /C "cd /D "C:\Users\Juzo Suzuya\CLionProjects\miniClex\cmake-build-debug\_deps\googletest-build\googletest" && "C:\Program Files\JetBrains\CLion 2023.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
   DESC = Installing the project stripped...
   pool = console
   restat = 1
 
-build lexer_lib/google_tests/lib/googletest/install/strip: phony lexer_lib/google_tests/lib/googletest/CMakeFiles/install/strip.util
+build _deps/googletest-build/googletest/install/strip: phony _deps/googletest-build/googletest/CMakeFiles/install/strip.util
 
 # =============================================================================
 # Target aliases.
-
-build LexerTesting: phony lexer_lib/google_tests/LexerTesting.exe
-
-build LexerTesting.exe: phony lexer_lib/google_tests/LexerTesting.exe
 
 build gmock: phony lib/libgmock.a
 
@@ -825,6 +829,10 @@ build miniClex_run: phony miniClex_run.exe
 
 build shunting_yard_lib: phony shunting_yard_lib/libshunting_yard_lib.a
 
+build tests: phony tests/tests.exe
+
+build tests.exe: phony tests/tests.exe
+
 # =============================================================================
 # Folder targets.
 
@@ -833,7 +841,28 @@ build shunting_yard_lib: phony shunting_yard_lib/libshunting_yard_lib.a
 #############################################
 # Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug
 
-build all: phony miniClex_run.exe lexer_lib/all shunting_yard_lib/all lexer_lib/google_tests/all
+build all: phony miniClex_run.exe lexer_lib/all shunting_yard_lib/all tests/all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-build
+
+build _deps/googletest-build/all: phony _deps/googletest-build/googlemock/all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-build/googlemock
+
+build _deps/googletest-build/googlemock/all: phony lib/libgmock.a lib/libgmock_main.a _deps/googletest-build/googletest/all
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/_deps/googletest-build/googletest
+
+build _deps/googletest-build/googletest/all: phony lib/libgtest.a lib/libgtest_main.a
 
 # =============================================================================
 
@@ -845,37 +874,16 @@ build lexer_lib/all: phony lexer_lib/liblexer_lib.a
 # =============================================================================
 
 #############################################
-# Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/lexer_lib/google_tests
-
-build lexer_lib/google_tests/all: phony lexer_lib/google_tests/LexerTesting.exe lexer_lib/google_tests/lib/all
-
-# =============================================================================
-
-#############################################
-# Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/lexer_lib/google_tests/lib
-
-build lexer_lib/google_tests/lib/all: phony lexer_lib/google_tests/lib/googlemock/all
-
-# =============================================================================
-
-#############################################
-# Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/lexer_lib/google_tests/lib/googlemock
-
-build lexer_lib/google_tests/lib/googlemock/all: phony lib/libgmock.a lib/libgmock_main.a lexer_lib/google_tests/lib/googletest/all
-
-# =============================================================================
-
-#############################################
-# Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/lexer_lib/google_tests/lib/googletest
-
-build lexer_lib/google_tests/lib/googletest/all: phony lib/libgtest.a lib/libgtest_main.a
-
-# =============================================================================
-
-#############################################
 # Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/shunting_yard_lib
 
 build shunting_yard_lib/all: phony shunting_yard_lib/libshunting_yard_lib.a
+
+# =============================================================================
+
+#############################################
+# Folder: C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/tests
+
+build tests/all: phony tests/tests.exe _deps/googletest-build/all
 
 # =============================================================================
 # Built-in targets
@@ -884,14 +892,14 @@ build shunting_yard_lib/all: phony shunting_yard_lib/libshunting_yard_lib.a
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeDependentOption.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakePackageConfigHelpers.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/GNUInstallDirs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-Initialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/WindowsPaths.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/cmake/gmock.pc.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/cmake/gmock_main.pc.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/cmake/Config.cmake.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/cmake/gtest.pc.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/cmake/gtest_main.pc.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/cmake/internal_utils.cmake C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/shunting_yard_lib/CMakeLists.txt CMakeCache.txt CMakeFiles/3.27.0/CMakeCCompiler.cmake CMakeFiles/3.27.0/CMakeCXXCompiler.cmake CMakeFiles/3.27.0/CMakeRCCompiler.cmake CMakeFiles/3.27.0/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeDependentOption.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakePackageConfigHelpers.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/ExternalProject/shared_internal_commands.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FetchContent.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FetchContent/CMakeLists.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageHandleStandardArgs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageMessage.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPython.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPython/Support.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/GNUInstallDirs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/GoogleTest.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-Initialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/WindowsPaths.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/shunting_yard_lib/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/tests/CMakeLists.txt CMakeCache.txt CMakeFiles/3.27.0/CMakeCCompiler.cmake CMakeFiles/3.27.0/CMakeCXXCompiler.cmake CMakeFiles/3.27.0/CMakeRCCompiler.cmake CMakeFiles/3.27.0/CMakeSystem.cmake _deps/googletest-src/CMakeLists.txt _deps/googletest-src/googlemock/CMakeLists.txt _deps/googletest-src/googlemock/cmake/gmock.pc.in _deps/googletest-src/googlemock/cmake/gmock_main.pc.in _deps/googletest-src/googletest/CMakeLists.txt _deps/googletest-src/googletest/cmake/Config.cmake.in _deps/googletest-src/googletest/cmake/gtest.pc.in _deps/googletest-src/googletest/cmake/gtest_main.pc.in _deps/googletest-src/googletest/cmake/internal_utils.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeDependentOption.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakePackageConfigHelpers.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/GNUInstallDirs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-Initialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/WindowsPaths.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/cmake/gmock.pc.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googlemock/cmake/gmock_main.pc.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/cmake/Config.cmake.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/cmake/gtest.pc.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/cmake/gtest_main.pc.in C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/google_tests/lib/googletest/cmake/internal_utils.cmake C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/shunting_yard_lib/CMakeLists.txt CMakeCache.txt CMakeFiles/3.27.0/CMakeCCompiler.cmake CMakeFiles/3.27.0/CMakeCXXCompiler.cmake CMakeFiles/3.27.0/CMakeRCCompiler.cmake CMakeFiles/3.27.0/CMakeSystem.cmake: phony
+build C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeDependentOption.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakePackageConfigHelpers.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeRCInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Compiler/GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/ExternalProject/shared_internal_commands.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FetchContent.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FetchContent/CMakeLists.cmake.in C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageHandleStandardArgs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageMessage.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPython.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPython/Support.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/GNUInstallDirs.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/GoogleTest.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-C.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-GNU.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-Initialize.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows-windres.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/Windows.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/Platform/WindowsPaths.cmake C$:/Program$ Files/JetBrains/CLion$ 2023.3/bin/cmake/win/x64/share/cmake-3.27/Modules/WriteBasicConfigVersionFile.cmake C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/lexer_lib/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/shunting_yard_lib/CMakeLists.txt C$:/Users/Juzo$ Suzuya/CLionProjects/miniClex/tests/CMakeLists.txt CMakeCache.txt CMakeFiles/3.27.0/CMakeCCompiler.cmake CMakeFiles/3.27.0/CMakeCXXCompiler.cmake CMakeFiles/3.27.0/CMakeRCCompiler.cmake CMakeFiles/3.27.0/CMakeSystem.cmake _deps/googletest-src/CMakeLists.txt _deps/googletest-src/googlemock/CMakeLists.txt _deps/googletest-src/googlemock/cmake/gmock.pc.in _deps/googletest-src/googlemock/cmake/gmock_main.pc.in _deps/googletest-src/googletest/CMakeLists.txt _deps/googletest-src/googletest/cmake/Config.cmake.in _deps/googletest-src/googletest/cmake/gtest.pc.in _deps/googletest-src/googletest/cmake/gtest_main.pc.in _deps/googletest-src/googletest/cmake/internal_utils.cmake: phony
 
 
 #############################################
