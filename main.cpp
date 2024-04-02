@@ -1,32 +1,48 @@
 #include "lexer.h"
 #include <fstream>
 #include <stack>
+#include <vector>
 
 using Lexem = std::pair<std::string, std::string>;
-std::fstream streamline(R"(C:\Users\TEMP.EDU\Source\Repos\miniClex\code.txt)");
+std::fstream streamline(R"(C:\Users\ivukhov\Source\Repos\miniClex\code.txt)");
 Lexer lexer(streamline);
+std::vector<std::string> temp = {};
+int pointer = 0;
 
-bool E1_shtrih(std::string temp = "") {
-    if (temp == "opinc") {
+bool E1_shtrih() {
+    if (temp[pointer] == "opinc") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
         return true;
     }
     return true;
 }
 
-bool E1(std::string temp = "") {
-    if (temp == "opinc") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (temp1 == "id") {
+bool E1() {
+    if (temp[pointer] == "opinc") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
+            return false;
+        }
+        if (temp[pointer] == "id") {
             return true;
         }
         return false;
     }
-    if (temp == "num") {
+    if (temp[pointer] == "num") {
         return true;
     }
-    if (temp == "id") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (!E1_shtrih(temp1)) {
+    if (temp[pointer] == "id") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
+            return true;
+        }
+        if (!E1_shtrih()) {
             return false;
         }
         return true;
@@ -43,59 +59,37 @@ bool E1(std::string temp = "") {
     return false;
 }
 
-bool E2(std::string temp = "") {
-    if (temp == "opnot") {
-        if (!E2(temp)) {
+bool E2() {
+    if (temp[pointer] == "opnot") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
+            return false;
+        }
+        if (!E1()) {
             return false;
         }
         return true;
     }
-    if (!E1(temp)) {
+    if (!E1()) {
         return false;
     }
     return true;
 }
 
-bool E3_shtrih(std::string temp = "") {
-    if (temp == "opmul") {
-        if (!E2(temp)) {
+bool E3_shtrih() {
+    if (temp[pointer] == "opmul") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
             return false;
         }
-        if (!E3_shtrih(temp)) {
+        if (!E2()) {
             return false;
         }
-        return true;
-    }
-    return true;
-}
-
-bool E3(std::string temp = "") {
-    if (!E2(temp)) {
-        return false;
-    }
-    if (!E3_shtrih(temp)) {
-        return false;
-    }
-    return true;
-}
-
-bool E4_shtrih(std::string temp = "") {
-    if (temp == "opplus") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (!E3(temp1)) {
-            return false;
-        }
-        if (!E4_shtrih(temp1)) {
-            return false;
-        }
-        return true;
-    }
-    if (temp == "opminus") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (!E3(temp1)) {
-            return false;
-        }
-        if (!E4_shtrih(temp1)) {
+        if (!E3_shtrih()) {
             return false;
         }
         return true;
@@ -103,59 +97,43 @@ bool E4_shtrih(std::string temp = "") {
     return true;
 }
 
-bool E4(std::string temp = "") {
-    if (!E3(temp)) {
+bool E3() {
+    if (!E2()) {
         return false;
     }
-    if (!E4_shtrih(temp)) {
-        return false;
-    }
-    return true;
-}
-
-bool E5_shtrih(std::string temp = "") {
-    if (temp == "opeq") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (!E4(temp1)) {
-            return false;
-        }
-        return true;
-    }
-    if (temp == "opnot") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (!E4(temp1)) {
-            return false;
-        }
-        return true;
-    }
-    if (temp == "oplt") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (!E4(temp1)) {
-            return false;
-        }
-        return true;
-    }
-    return true;
-}
-
-bool E5(std::string temp = "") {
-    if (!E4(temp)) {
-        return false;
-    }
-    if (!E5_shtrih(temp)) {
+    if (!E3_shtrih()) {
         return false;
     }
     return true;
 }
 
-
-bool E6_shtrih(std::string temp = "") {
-    if (temp == "opand") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (!E5(temp1)) {
+bool E4_shtrih() {
+    if (temp[pointer] == "opplus") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
             return false;
         }
-        if (!E6_shtrih(temp1)) {
+        if (!E3()) {
+            return false;
+        }
+        if (!E4_shtrih()) {
+            return false;
+        }
+        return true;
+    }
+    if (temp[pointer] == "opminus") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
+            return false;
+        }
+        if (!E3()) {
+            return false;
+        }
+        if (!E4_shtrih()) {
             return false;
         }
         return true;
@@ -163,23 +141,49 @@ bool E6_shtrih(std::string temp = "") {
     return true;
 }
 
-bool E6(std::string temp = "") {
-    if (!E5(temp)) {
+bool E4() {
+    if (!E3()) {
         return false;
     }
-    if (!E6_shtrih(temp)) {
+    if (!E4_shtrih()) {
         return false;
     }
     return true;
 }
 
-bool E7_shtrih(std::string temp = "") {
-    if (temp == "opor") {
-        std::string temp1 = lexer.nextLexem().first;
-        if (!E6(temp1)) {
+bool E5_shtrih() {
+    if (temp[pointer] == "opeq") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
             return false;
         }
-        if (!E7_shtrih(temp1)) {
+        if (!E4()) {
+            return false;
+        }
+        return true;
+    }
+    else if (temp[pointer] == "opnot") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
+            return false;
+        }
+        if (!E4()) {
+            return false;
+        }
+        return true;
+    }
+    else if (temp[pointer] == "oplt") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
+            return false;
+        }
+        if (!E4()) {
             return false;
         }
         return true;
@@ -187,24 +191,86 @@ bool E7_shtrih(std::string temp = "") {
     return true;
 }
 
-bool E7(std::string temp = "") {
-    if (!E6(temp) || !E7_shtrih(temp)) {
+bool E5() {
+    if (!E4()) {
+        return false;
+    }
+    if (!E5_shtrih()) {
         return false;
     }
     return true;
 }
 
-bool E(std::string temp = "") {
-    if (!E7(temp)) {
+
+bool E6_shtrih() {
+    if (temp[pointer] == "opand") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
+            return false;
+        }
+        if (!E5()) {
+            return false;
+        }
+        if (!E6_shtrih()) {
+            return false;
+        }
+        return true;
+    }
+    return true;
+}
+
+bool E6() {
+    if (!E5()) {
+        return false;
+    }
+    if (!E6_shtrih()) {
         return false;
     }
     return true;
 }
 
+bool E7_shtrih() {
+    if (temp[pointer] == "opor") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (pointer >= temp.size()) {
+            return false;
+        }
+        if (!E6()) {
+            return false;
+        }
+        if (!E7_shtrih()) {
+            return false;
+        }
+        return true;
+    }
+    return true;
+}
+
+bool E7() {
+    if (!E6()){
+        return false;
+    }
+    if (!E7_shtrih()) {
+        return false;
+    }
+    return true;
+}
+
+bool E() {
+    if (!E7()) {
+        return false;
+    }
+    return true;
+}
 
 int main() {
     Lexem lexem;
-    std::string zxc = lexer.nextLexem().first;
-    bool A = E(zxc);
+    std::string a = lexer.nextLexem().first;
+    temp.push_back(a);
+    bool A = E();
     std::cout << A;
 }
