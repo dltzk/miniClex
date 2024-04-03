@@ -1,3 +1,0 @@
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/cmake-build-debug/CMakeFiles/shunting_yard_lib.dir
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/shunting_yard_lib/cmake-build-debug/CMakeFiles/rebuild_cache.dir

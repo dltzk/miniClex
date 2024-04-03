@@ -410,13 +410,13 @@ lexer_lib_IS_TOP_LEVEL:STATIC=OFF
 lexer_lib_SOURCE_DIR:STATIC=C:/Users/Juzo Suzuya/CLionProjects/miniClex/lexer_lib
 
 //Value Computed by CMake
-miniClex_BINARY_DIR:STATIC=C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/tests
+miniClex_BINARY_DIR:STATIC=C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug
 
 //Value Computed by CMake
-miniClex_IS_TOP_LEVEL:STATIC=OFF
+miniClex_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
-miniClex_SOURCE_DIR:STATIC=C:/Users/Juzo Suzuya/CLionProjects/miniClex/tests
+miniClex_SOURCE_DIR:STATIC=C:/Users/Juzo Suzuya/CLionProjects/miniClex
 
 //Value Computed by CMake
 shunting_yard_Lib_BINARY_DIR:STATIC=C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/shunting_yard_lib
@@ -571,7 +571,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
