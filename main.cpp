@@ -8,6 +8,29 @@ std::fstream streamline(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\code.txt)
 Lexer lexer(streamline);
 std::vector<std::string> temp = {};
 int pointer = 0;
+bool E();
+bool E1();
+bool E2();
+bool E3();
+bool E4();
+bool E5();
+bool E6();
+bool E7();
+bool E7_shtrih();
+bool E6_shtrih();
+bool E5_shtrih();
+bool E4_shtrih();
+bool E3_shtrih();
+bool E1_shtrih();
+
+bool E1_shtrih() {
+    if (temp[pointer] == "opinc"){
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+    }
+    return true;
+}
 
 bool E1() {
     if (temp[pointer] == "end"){
@@ -25,22 +48,34 @@ bool E1() {
         }
         return false;
     }
-    if (temp[pointer] == "num") {
+    else if (temp[pointer] == "num") {
         pointer += 1;
         std::string a = lexer.nextLexem().first;
         temp.push_back(a);
         return true;
     }
-    if (temp[pointer] == "id") {
+    else if (temp[pointer] == "id") {
         pointer += 1;
         std::string a = lexer.nextLexem().first;
         temp.push_back(a);
-        if (temp[pointer] == "opinc"){
+        if (!E1_shtrih()){
+            return false;
+        }
+        return true;
+    }
+    else if (temp[pointer] == "lpar") {
+        pointer += 1;
+        std::string a = lexer.nextLexem().first;
+        temp.push_back(a);
+        if (!E()) {
+            return false;
+        }
+        if (temp[pointer] == "rpar") {
             pointer += 1;
             std::string a = lexer.nextLexem().first;
             temp.push_back(a);
+            return true;
         }
-        return true;
     }
     return false;
 }
