@@ -1,6 +1,0 @@
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/CMakeFiles/miniClex_run.dir
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/lexer_lib/CMakeFiles/lexer_lib.dir
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/lexer_lib/CMakeFiles/edit_cache.dir
-C:/Users/Juzo Suzuya/CLionProjects/miniClex/cmake-build-debug/lexer_lib/CMakeFiles/rebuild_cache.dir
