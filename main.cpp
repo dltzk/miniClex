@@ -84,6 +84,9 @@ bool ForExp(){
 
 bool ForInit(){
     int temp_point = pointer;
+    if (!Type()){
+        pointer = temp_point;
+    }
     if (AssignOrCall()){
         return true;
     } else {
@@ -257,7 +260,7 @@ bool InitVar(){
         return false;
     }
 
-    if (temp[pointer] == "assign"){
+    if (temp[pointer] == "opassign"){
         pointer++;
         std::string a = lexer.nextLexem().first;
         temp.push_back(a);
@@ -355,9 +358,6 @@ bool DeclareStmtList(){
         if (!DeclVarList()){
             return false;
         }
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
         if (temp[pointer] == "semicolon") {
             pointer++;
             std::string a = lexer.nextLexem().first;
@@ -508,9 +508,8 @@ bool ArgList(){
                 return false;
             }
         }
-        return true;
     }
-    return false;
+    return true;
 }
 
 bool E1_shtrih() {
