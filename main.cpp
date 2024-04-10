@@ -13,6 +13,7 @@ int pointer = 0;
 std::vector<std::string> numbers = {};
 std::vector<std::string> answer = {"E"};
 int number_pointer = 0;
+std::string temp_lexem = "";
 bool E();
 bool E1();
 bool E2();
@@ -64,8 +65,11 @@ void go_back(){
 }
 
 void add_token_next(){
+    Lexem lexem_for_output;
+    lexem_for_output = lexer.nextLexem();
     pointer++;
-    std::string a = lexer.nextLexem().first;
+    std::string a = lexem_for_output.first;
+    temp_lexem = lexem_for_output.second;
     temp.push_back(a);
 }
 
@@ -518,14 +522,14 @@ bool StmtList() {
 
 bool ArgList(){
     if (temp[pointer] == "id"){
-        add_token_next();
 
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "id";
+        std::string temp_string = substring_generator() + temp_lexem;
         answer.push_back(temp_string);
 
+        add_token_next();
 
         if (temp[pointer] == "comma"){
 
@@ -614,15 +618,14 @@ bool E1() {
 
 
         if (temp[pointer] == "id") {
-            add_token_next();
-
 
             numbers.push_back("0");
             new_pointer();
 
-            std::string temp_string = substring_generator() + "id";
+            std::string temp_string = substring_generator() + temp_lexem;
             answer.push_back(temp_string);
 
+            add_token_next();
 
             return true;
         }
@@ -630,25 +633,27 @@ bool E1() {
         return false;
     }
     else if (temp[pointer] == "num") {
-        add_token_next();
 
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "num";
+        std::string temp_string = substring_generator() + temp_lexem;
         answer.push_back(temp_string);
+
+        add_token_next();
 
         go_back();
         return true;
     }
     else if (temp[pointer] == "id") {
-        add_token_next();
 
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "E1List";
+        std::string temp_string = substring_generator() + temp_lexem;
         answer.push_back(temp_string);
+
+        add_token_next();
 
         if (!E1_shtrih()){
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
@@ -1114,7 +1119,9 @@ bool E() {
 
 int main() {
     Lexem lexem;
-    std::string a = lexer.nextLexem().first;
+    lexem = lexer.nextLexem();
+    std::string a = lexem.first;
+    temp_lexem = lexem.second;
     temp.push_back(a);
     bool A = E();
     output.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\output.txt)");
