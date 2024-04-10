@@ -2,12 +2,17 @@
 #include <fstream>
 #include <stack>
 #include <vector>
+#include <iostream>
 
 using Lexem = std::pair<std::string, std::string>;
 std::fstream streamline(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\code.txt)");
+std::ofstream output;
 Lexer lexer(streamline);
 std::vector<std::string> temp = {};
 int pointer = 0;
+std::vector<std::string> numbers = {};
+std::vector<std::string> answer = {"E"};
+int number_pointer = 0;
 bool E();
 bool E1();
 bool E2();
@@ -30,6 +35,7 @@ bool AssignOrCallOp();
 bool WhileOp();
 bool ForOp();
 bool IfOp();
+bool ElsePart();
 bool SwitchOp();
 bool IOp();
 bool OOp();
@@ -46,17 +52,102 @@ bool ForInit();
 bool ForExp();
 bool ForLoop();
 bool ArgList();
+void add_token_next();
 
+void new_pointer(){
+    number_pointer = numbers.size() - 1;
+}
+
+void go_back(){
+    number_pointer--;
+    numbers.pop_back();
+}
+
+void add_token_next(){
+    pointer++;
+    std::string a = lexer.nextLexem().first;
+    temp.push_back(a);
+}
+
+std::string substring_generator(){
+    std::string temp_string = "";
+    for (int i = 0; i < number_pointer; i++){
+        if (numbers[i] == "0"){
+            temp_string += "  ";
+        } else { temp_string += "│ ";}
+    }
+    if (numbers[number_pointer] == "0"){
+        temp_string += "└";
+    } else { temp_string += "├";}
+    return temp_string;
+}
+
+bool ElsePart(){
+    if (temp[pointer] == "kwelse"){
+        add_token_next();
+        if (!Stmt()){
+            return false;
+        }
+    }
+    return true;
+}
+
+bool IfOp(){
+    if (temp[pointer] == "kwif"){
+        add_token_next();
+        if (temp[pointer] == "lpar"){
+            add_token_next();
+            if (!E()){
+                return false;
+            }
+            if (temp[pointer] == "rpar"){
+                add_token_next();
+                if (!Stmt()){
+                    return false;
+                }
+                if (!ElsePart()){
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool OOp(){
+    if (temp[pointer] == "kwout"){
+        add_token_next();
+        if (!E()){
+            return false;
+        }
+        if (temp[pointer] != "semicolon"){
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+bool IOp(){
+    if (temp[pointer] == "kwin"){
+        add_token_next();
+        if (temp[pointer] == "id"){
+            add_token_next();
+            if (temp[pointer] != "semicolon"){
+                return false;
+            }
+            return true;
+        }
+    }
+    return false;
+}
 
 bool ForLoop(){
     if (temp[pointer] == "opinc"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (temp[pointer] == "id"){
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             return true;
         }
         return false;
@@ -97,34 +188,24 @@ bool ForInit(){
 
 bool ForOp(){
     if (temp[pointer] == "kwfor"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (temp[pointer] == "lpar"){
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             if (!ForInit()){
                 return false;
             }
             if (temp[pointer] == "semicolon"){
-                pointer++;
-                std::string a = lexer.nextLexem().first;
-                temp.push_back(a);
+                add_token_next();
                 if (!ForExp()){
                     return false;
                 }
                 if (temp[pointer] == "semicolon"){
-                    pointer++;
-                    std::string a = lexer.nextLexem().first;
-                    temp.push_back(a);
+                    add_token_next();
                     if (!ForLoop()){
                         return false;
                     }
                     if (temp[pointer] == "rpar"){
-                        pointer++;
-                        std::string a = lexer.nextLexem().first;
-                        temp.push_back(a);
+                        add_token_next();
                         if (!Stmt()){
                             return false;
                         }
@@ -140,20 +221,14 @@ bool ForOp(){
 
 bool WhileOp(){
     if (temp[pointer] == "kwwhile"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (temp[pointer] == "lpar"){
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             if (!E()){
                 return false;
             }
             if (temp[pointer] == "rpar"){
-                pointer++;
-                std::string a = lexer.nextLexem().first;
-                temp.push_back(a);
+                add_token_next();
                 return true;
             }
         }
@@ -163,18 +238,14 @@ bool WhileOp(){
 
 bool AssignOrCallList(){
     if (temp[pointer] == "opassign"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (!E()){
             return false;
         }
         return true;
     }
     else if (temp[pointer] == "lpar"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (!ParamList()){
             return false;
         }
@@ -187,9 +258,7 @@ bool AssignOrCallList(){
 
 bool AssignOrCall(){
     if (temp[pointer] == "id"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (!AssignOrCallList()){
             return false;
         }
@@ -205,9 +274,7 @@ bool AssignOrCallOp(){
     if (temp[pointer] != "semicolon"){
         return false;
     }
-    pointer++;
-    std::string a = lexer.nextLexem().first;
-    temp.push_back(a);
+    add_token_next();
     return true;
 }
 
@@ -217,16 +284,12 @@ bool ParamListList(){
     }
 
     if (temp[pointer] == "comma"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (!Type()){
             return false;
         }
         if (temp[pointer] == "id"){
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             if (!ParamList()){
                 return false;
             }
@@ -244,9 +307,7 @@ bool ParamList() {
 
     if (Type()) {
         if (temp[pointer] == "id") {
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             if (!ParamListList()) {
                 return false;
             }
@@ -261,19 +322,13 @@ bool InitVar(){
     }
 
     if (temp[pointer] == "opassign"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (temp[pointer] == "num") {
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             return true;
         }
         else if (temp[pointer] == "char"){
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             return true;
         }
         return false;
@@ -287,13 +342,9 @@ bool DeclVarList(){
     }
 
     if (temp[pointer] == "comma"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (temp[pointer] == "id"){
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             if (!InitVar()){
                 return false;
             }
@@ -312,40 +363,28 @@ bool DeclareStmtList(){
     }
 
     if (temp[pointer] == "lpar") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (!ParamList()) {
             return false;
         }
         if (temp[pointer] == "rpar") {
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             if (temp[pointer] == "lbrace") {
-                pointer++;
-                std::string a = lexer.nextLexem().first;
-                temp.push_back(a);
+                add_token_next();
                 if (!StmtList()) {
                     return false;
                 }
                 if (temp[pointer] == "rbrace") {
-                    pointer++;
-                    std::string a = lexer.nextLexem().first;
-                    temp.push_back(a);
+                    add_token_next();
                     return true;
                 }
             }
         }
     }
     if (temp[pointer] == "opassign") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (temp[pointer] == "num" or temp[pointer] == "char") {
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             if (!DeclVarList()) {
                 return false;
             }
@@ -359,9 +398,7 @@ bool DeclareStmtList(){
             return false;
         }
         if (temp[pointer] == "semicolon") {
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             return true;
         }
         return false;
@@ -379,9 +416,7 @@ bool DeclareStmt(){
     if (temp[pointer] != "id"){
         return false;
     }
-    pointer++;
-    std::string a = lexer.nextLexem().first;
-    temp.push_back(a);
+    add_token_next();
     if (!DeclareStmtList()){
         return false;
     }
@@ -394,15 +429,11 @@ bool Type(){
     }
 
     if (temp[pointer] == "kwint"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         return true;
     }
     if (temp[pointer] == "kwchar"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         return true;
     }
     return false;
@@ -427,49 +458,39 @@ bool Stmt() {
     if (ForOp()){
         return true;
     } else {pointer = temp_point;}
-//    if (IfOp()){
-//        return true;
-//    } else {pointer = temp_point;}
+    if (IfOp()){
+        return true;
+    } else {pointer = temp_point;}
 //    if (SwitchOp()){
 //        return true;
 //    } else {pointer = temp_point;}
-//    if (IOp()){
-//        return true;
-//    } else {pointer = temp_point;}
-//    if (OOp()){
-//        return true;
-//    } else {pointer = temp_point;}
+    if (IOp()){
+        return true;
+    } else {pointer = temp_point;}
+    if (OOp()){
+        return true;
+    } else {pointer = temp_point;}
     if (temp[pointer] == "semicolon"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         return true;
     }
     if (temp[pointer] == "lbrace"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (StmtList()){
             if (temp[pointer] == "rbrace"){
-                pointer++;
-                std::string a = lexer.nextLexem().first;
-                temp.push_back(a);
+                add_token_next();
                 return true;
             }
         }
         return false;
     }
     if (temp[pointer] == "kwreturn"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
         if (!E()){
             return false;
         }
         if (temp[pointer] == "semicolon") {
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
             return true;
         }
         return false;
@@ -496,273 +517,598 @@ bool StmtList() {
 }
 
 bool ArgList(){
-    if (temp[pointer] == "id" or temp[pointer] == "num"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+    if (temp[pointer] == "id"){
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "id";
+        answer.push_back(temp_string);
+
+
         if (temp[pointer] == "comma"){
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+
+
+            add_token_next();
+
+            numbers.push_back("1");
+            new_pointer();
+
+
+            std::string temp_string = substring_generator() + "comma ArgList";
+            answer.push_back(temp_string);
+
+            go_back();
+
+            int point = number_pointer;
+
             if (!ArgList()){
+                numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
                 return false;
             }
+            go_back();
         }
     }
+    go_back();
     return true;
 }
 
 bool E1_shtrih() {
+    int point = number_pointer;
     if (temp[pointer] == "opinc"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opinc";
+        answer.push_back(temp_string);
+        go_back();
     }
-    if (temp[pointer] == "lpar"){
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+    else if (temp[pointer] == "lpar"){
+        add_token_next();
+
+        numbers.push_back("1");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "lpar ArgList";
+        answer.push_back(temp_string);
+
         if (!ArgList()){
+            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
+
+        point = number_pointer;
+
         if (temp[pointer] == "rpar"){
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
+
+            numbers.push_back("0");
+            new_pointer();
+
+            std::string temp_string1 = substring_generator() + "rpar";
+            answer.push_back(temp_string1);
+            go_back();
+        } else {
+            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
+            return false;
         }
     }
+
     return true;
 }
 
 bool E1() {
-    if (temp[pointer] == "end"){
-        return false;
-    }
+    int point = number_pointer;
     if (temp[pointer] == "opinc") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        numbers.push_back("1");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opinc";
+        answer.push_back(temp_string);
+
+
+
         if (temp[pointer] == "id") {
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
+
+
+            numbers.push_back("0");
+            new_pointer();
+
+            std::string temp_string = substring_generator() + "id";
+            answer.push_back(temp_string);
+
+
             return true;
         }
+        numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
         return false;
     }
     else if (temp[pointer] == "num") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "num";
+        answer.push_back(temp_string);
+
+        go_back();
         return true;
     }
     else if (temp[pointer] == "id") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "E1List";
+        answer.push_back(temp_string);
+
         if (!E1_shtrih()){
+            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
+        go_back();
         return true;
     }
     else if (temp[pointer] == "lpar") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        numbers.push_back("1");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "lpar E";
+        answer.push_back(temp_string);
+
         if (!E()) {
+            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
+
         if (temp[pointer] == "rpar") {
-            pointer++;
-            std::string a = lexer.nextLexem().first;
-            temp.push_back(a);
+            add_token_next();
+
+            numbers.push_back("0");
+            new_pointer();
+
+            std::string temp_string = substring_generator() + "rpar";
+            answer.push_back(temp_string);
+
+            go_back();
+
             return true;
         }
     }
+    numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
     return false;
 }
 
 bool E2() {
+    int point = number_pointer;
     if (temp[pointer] == "opnot") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opnot E1";
+        answer.push_back(temp_string);
+
+        if (!E1()){
+            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
+            return false;
+        }
+
+        go_back();
+
+    } else {
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "E1";
+        answer.push_back(temp_string);
+
+        if (!E1()) {
+            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
+            return false;
+        }
+        go_back();
     }
-    if (!E1()) {
-        return false;
-    }
+    go_back();
     return true;
 }
 
 bool E3_shtrih() {
-    if (temp[pointer] == "end"){
-        return true;
-    }
     if (temp[pointer] == "opmul") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("1");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opmul E2";
+        answer.push_back(temp_string);
+
         if (!E2()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
+
+        point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string1 = substring_generator() + "E3List";
+        answer.push_back(temp_string1);
+
         if (!E3_shtrih()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
+    go_back();
     return true;
 }
 
 bool E3() {
+    int point = number_pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    std::string temp_string = substring_generator() + "E2";
+    answer.push_back(temp_string);
+
     if (!E2()) {
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+
+    point = number_pointer;
+
+    numbers.push_back("0");
+    new_pointer();
+
+    std::string temp_string1 = substring_generator() + "E3List";
+    answer.push_back(temp_string1);
+
     if (!E3_shtrih()){
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+    go_back();
     return true;
 }
 
 bool E4_shtrih() {
-    if (temp[pointer] == "end"){
-        return true;
-    }
     if (temp[pointer] == "opplus") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("1");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opplus E3";
+        answer.push_back(temp_string);
+
         if (!E3()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
+
+        point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string1 = substring_generator() + "E4List";
+        answer.push_back(temp_string1);
+
         if (!E4_shtrih()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
-    if (temp[pointer] == "opminus") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+    else if (temp[pointer] == "opminus") {
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("1");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opminus E3";
+        answer.push_back(temp_string);
+
         if (!E3()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
+        point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string1 = substring_generator() + "E4List";
+        answer.push_back(temp_string1);
+
         if (!E4_shtrih()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
+    go_back();
     return true;
 }
 
 bool E4() {
+    int point = number_pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    std::string temp_string = substring_generator() + "E3";
+    answer.push_back(temp_string);
+
     if (!E3()) {
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+
+    point = number_pointer;
+
+    numbers.push_back("0");
+    new_pointer();
+
+    std::string temp_string1 = substring_generator() + "E4List";
+    answer.push_back(temp_string1);
+
     if (!E4_shtrih()){
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+
+    go_back();
     return true;
 }
 
 bool E5_shtrih() {
-    if (temp[pointer] == "end"){
-        return true;
-    }
     if (temp[pointer] == "opeq") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opeq E4";
+        answer.push_back(temp_string);
+
         if (!E4()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
-    else if (temp[pointer] == "opnot") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+    else if (temp[pointer] == "opne") {
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opne E4";
+        answer.push_back(temp_string);
+
         if (!E4()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
     else if (temp[pointer] == "oplt") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "oplt E4";
+        answer.push_back(temp_string);
+
         if (!E4()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
+    go_back();
     return true;
 }
 
 bool E5() {
+    int point = number_pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    std::string temp_string = substring_generator() + "E4";
+    answer.push_back(temp_string);
+
     if (!E4()) {
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+
+    point = number_pointer;
+
+    numbers.push_back("0");
+    new_pointer();
+
+    std::string temp_string2 = substring_generator() + "E5List";
+    answer.push_back(temp_string2);
+
     if (!E5_shtrih()) {
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+
+    go_back();
     return true;
 }
 
 
 bool E6_shtrih() {
-    if (temp[pointer] == "end"){
-        return true;
-    }
     if (temp[pointer] == "opand") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("1");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opand E5";
+        answer.push_back(temp_string);
+
         if (!E5()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
+        point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string1 = substring_generator() + "E6List";
+        answer.push_back(temp_string1);
+
         if (!E6_shtrih()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
+    go_back();
     return true;
 }
 
 bool E6() {
+    int point = number_pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    std::string temp_string = substring_generator() + "E5";
+    answer.push_back(temp_string);
+
+
     if (!E5()) {
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+
+    point = number_pointer;
+
+    numbers.push_back("0");
+    new_pointer();
+
+    std::string temp_string1 = substring_generator() + "E6List";
+    answer.push_back(temp_string1);
+
     if (!E6_shtrih()) {
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+    go_back();
     return true;
 }
 
 bool E7_shtrih() {
-    if (temp[pointer] == "end"){
-        return true;
-    }
     if (temp[pointer] == "opor") {
-        pointer++;
-        std::string a = lexer.nextLexem().first;
-        temp.push_back(a);
+
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("1");
+        new_pointer();
+
+        std::string temp_string = substring_generator() + "opor E6";
+        answer.push_back(temp_string);
+
         if (!E6()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
+
+        point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        std::string temp_string1 = substring_generator() + "E7List";
+        answer.push_back(temp_string1);
+
         if (!E7_shtrih()) {
+            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
+    go_back();
     return true;
 }
 
 bool E7() {
+    int point = number_pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    std::string temp_string = substring_generator() + "E6";
+    answer.push_back(temp_string);
+
     if (!E6()){
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+
+    point = number_pointer;
+
+    numbers.push_back("0");
+    new_pointer();
+
+    std::string temp_string1 = substring_generator() + "E7List";
+    answer.push_back(temp_string1);
+
     if (!E7_shtrih()) {
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+
+    go_back();
     return true;
 }
 
 bool E() {
+    int point = number_pointer;
+    numbers.push_back("0");
+    new_pointer();
+
+    std::string temp_string = substring_generator() + "E7";
+    answer.push_back(temp_string);
+
     if (!E7()) {
+        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
+    go_back();
     return true;
 }
 
@@ -770,11 +1116,16 @@ int main() {
     Lexem lexem;
     std::string a = lexer.nextLexem().first;
     temp.push_back(a);
-    bool A = StmtList();
+    bool A = E();
+    output.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\output.txt)");
+    while (!answer.empty()) {
+        output << answer.front() << std::endl;
+        answer.erase(answer.begin());
+    }
+    output.close();
     if (A and temp[pointer] == "end"){
         std::cout << "Correct expression";
     } else {
         std::cout << "Incorrect expression";
     }
-
 }
