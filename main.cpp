@@ -527,27 +527,40 @@ bool StmtList() {
 bool ArgList(){
     if (temp[pointer] == "id"){
 
-        numbers.push_back("0");
-        new_pointer();
+//        std::string temp_id = temp_lexem;
 
-        string_generator(temp_lexem);
+//        numbers.push_back("1");
+//        new_pointer();
+//
+//        string_generator(temp_lexem);
+//
+//        add_token_next();
+//
+        std::string temp_id = temp_lexem;
 
         add_token_next();
+
+        if (temp[pointer] == "comma"){
+            numbers.push_back("1");
+            new_pointer();
+            string_generator(temp_id);
+        } else {
+            numbers.push_back("0");
+            new_pointer();
+            string_generator(temp_id);
+        }
 
 
         if (temp[pointer] == "comma"){
 
-
             add_token_next();
 
+            go_back();
 
             numbers.push_back("0");
             new_pointer();
 
-            go_back();
-
             string_generator("comma ArgList");
-
 
             int point = number_pointer;
 
@@ -556,7 +569,6 @@ bool ArgList(){
                 numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
                 return false;
             }
-            go_back();
         }
     }
     go_back();
@@ -587,6 +599,7 @@ bool E1_shtrih() {
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
+        go_back();
 
         point = number_pointer;
 
@@ -598,12 +611,13 @@ bool E1_shtrih() {
 
             string_generator("rpar");
 
+            go_back();
+
 
         } else {
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
-        go_back();
     }
     go_back();
     return true;
