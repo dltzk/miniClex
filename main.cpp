@@ -3,10 +3,9 @@
 #include <stack>
 #include <vector>
 #include <iostream>
-
 using Lexem = std::pair<std::string, std::string>;
+
 std::fstream streamline(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\code.txt)");
-std::ofstream output;
 Lexer lexer(streamline);
 std::vector<std::string> temp = {};
 int pointer = 0;
@@ -54,6 +53,8 @@ bool ForExp();
 bool ForLoop();
 bool ArgList();
 void add_token_next();
+void go_back();
+void new_pointer();
 
 void new_pointer(){
     number_pointer = numbers.size() - 1;
@@ -73,17 +74,20 @@ void add_token_next(){
     temp.push_back(a);
 }
 
-std::string substring_generator(){
+void string_generator(std::string expression){
     std::string temp_string = "";
     for (int i = 0; i < number_pointer; i++){
         if (numbers[i] == "0"){
             temp_string += "  ";
         } else { temp_string += "│ ";}
+//        } else { temp_string += "| ";}
     }
     if (numbers[number_pointer] == "0"){
-        temp_string += "└";
-    } else { temp_string += "├";}
-    return temp_string;
+        temp_string += "└" + expression;
+    } else { temp_string += "├" + expression; }
+//        temp_string += "L " + expression;
+//    } else { temp_string += "> " + expression; }
+    answer.push_back(temp_string);
 }
 
 bool ElsePart(){
@@ -526,26 +530,27 @@ bool ArgList(){
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + temp_lexem;
-        answer.push_back(temp_string);
+        string_generator(temp_lexem);
 
         add_token_next();
+
 
         if (temp[pointer] == "comma"){
 
 
             add_token_next();
 
+
             numbers.push_back("1");
             new_pointer();
 
-
-            std::string temp_string = substring_generator() + "comma ArgList";
-            answer.push_back(temp_string);
-
             go_back();
 
+            string_generator("comma ArgList");
+
+
             int point = number_pointer;
+
 
             if (!ArgList()){
                 numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
@@ -566,9 +571,8 @@ bool E1_shtrih() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opinc";
-        answer.push_back(temp_string);
-        go_back();
+        string_generator("opinc");
+
     }
     else if (temp[pointer] == "lpar"){
         add_token_next();
@@ -576,8 +580,7 @@ bool E1_shtrih() {
         numbers.push_back("1");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "lpar ArgList";
-        answer.push_back(temp_string);
+        string_generator("lpar ArgList");
 
         if (!ArgList()){
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
@@ -592,15 +595,16 @@ bool E1_shtrih() {
             numbers.push_back("0");
             new_pointer();
 
-            std::string temp_string1 = substring_generator() + "rpar";
-            answer.push_back(temp_string1);
-            go_back();
+            string_generator("rpar");
+
+
         } else {
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
+        go_back();
     }
-
+    go_back();
     return true;
 }
 
@@ -609,12 +613,10 @@ bool E1() {
     if (temp[pointer] == "opinc") {
         add_token_next();
 
-        numbers.push_back("1");
+        numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opinc";
-        answer.push_back(temp_string);
-
+        string_generator("opinc");
 
 
         if (temp[pointer] == "id") {
@@ -622,11 +624,12 @@ bool E1() {
             numbers.push_back("0");
             new_pointer();
 
-            std::string temp_string = substring_generator() + temp_lexem;
-            answer.push_back(temp_string);
+            string_generator(temp_lexem);
 
             add_token_next();
 
+            go_back();
+            go_back();
             return true;
         }
         numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
@@ -637,8 +640,7 @@ bool E1() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + temp_lexem;
-        answer.push_back(temp_string);
+        string_generator(temp_lexem);
 
         add_token_next();
 
@@ -650,8 +652,7 @@ bool E1() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + temp_lexem;
-        answer.push_back(temp_string);
+        string_generator(temp_lexem + " E1List");
 
         add_token_next();
 
@@ -668,13 +669,13 @@ bool E1() {
         numbers.push_back("1");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "lpar E";
-        answer.push_back(temp_string);
+        string_generator("lpar E");
 
         if (!E()) {
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
+        go_back();
 
         if (temp[pointer] == "rpar") {
             add_token_next();
@@ -682,11 +683,9 @@ bool E1() {
             numbers.push_back("0");
             new_pointer();
 
-            std::string temp_string = substring_generator() + "rpar";
-            answer.push_back(temp_string);
+            string_generator("rpar");
 
             go_back();
-
             return true;
         }
     }
@@ -702,28 +701,23 @@ bool E2() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opnot E1";
-        answer.push_back(temp_string);
+        string_generator("opnot E1");
 
         if (!E1()){
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
 
-        go_back();
-
     } else {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "E1";
-        answer.push_back(temp_string);
+        string_generator("E1");
 
         if (!E1()) {
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
-        go_back();
     }
     go_back();
     return true;
@@ -738,8 +732,7 @@ bool E3_shtrih() {
         numbers.push_back("1");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opmul E2";
-        answer.push_back(temp_string);
+        string_generator("opmul E2");
 
         if (!E2()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -751,8 +744,7 @@ bool E3_shtrih() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string1 = substring_generator() + "E3List";
-        answer.push_back(temp_string1);
+        string_generator("E3List");
 
         if (!E3_shtrih()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -769,8 +761,7 @@ bool E3() {
     numbers.push_back("1");
     new_pointer();
 
-    std::string temp_string = substring_generator() + "E2";
-    answer.push_back(temp_string);
+    string_generator("E2");
 
     if (!E2()) {
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -782,8 +773,7 @@ bool E3() {
     numbers.push_back("0");
     new_pointer();
 
-    std::string temp_string1 = substring_generator() + "E3List";
-    answer.push_back(temp_string1);
+    string_generator("E3List");
 
     if (!E3_shtrih()){
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -802,8 +792,7 @@ bool E4_shtrih() {
         numbers.push_back("1");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opplus E3";
-        answer.push_back(temp_string);
+        string_generator("opplus E3");
 
         if (!E3()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -815,8 +804,7 @@ bool E4_shtrih() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string1 = substring_generator() + "E4List";
-        answer.push_back(temp_string1);
+        string_generator("E4List");
 
         if (!E4_shtrih()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -831,8 +819,7 @@ bool E4_shtrih() {
         numbers.push_back("1");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opminus E3";
-        answer.push_back(temp_string);
+        string_generator("opminus E3");
 
         if (!E3()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -843,8 +830,7 @@ bool E4_shtrih() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string1 = substring_generator() + "E4List";
-        answer.push_back(temp_string1);
+        string_generator("E4List");
 
         if (!E4_shtrih()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -861,8 +847,7 @@ bool E4() {
     numbers.push_back("1");
     new_pointer();
 
-    std::string temp_string = substring_generator() + "E3";
-    answer.push_back(temp_string);
+    string_generator("E3");
 
     if (!E3()) {
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -874,14 +859,12 @@ bool E4() {
     numbers.push_back("0");
     new_pointer();
 
-    std::string temp_string1 = substring_generator() + "E4List";
-    answer.push_back(temp_string1);
+    string_generator("E4List");
 
     if (!E4_shtrih()){
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
-
     go_back();
     return true;
 }
@@ -895,8 +878,7 @@ bool E5_shtrih() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opeq E4";
-        answer.push_back(temp_string);
+        string_generator("opeq E4");
 
         if (!E4()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -911,8 +893,7 @@ bool E5_shtrih() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opne E4";
-        answer.push_back(temp_string);
+        string_generator("opne E4");
 
         if (!E4()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -927,8 +908,7 @@ bool E5_shtrih() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "oplt E4";
-        answer.push_back(temp_string);
+        string_generator("oplt E4");
 
         if (!E4()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -945,8 +925,7 @@ bool E5() {
     numbers.push_back("1");
     new_pointer();
 
-    std::string temp_string = substring_generator() + "E4";
-    answer.push_back(temp_string);
+    string_generator("E4");
 
     if (!E4()) {
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -958,14 +937,12 @@ bool E5() {
     numbers.push_back("0");
     new_pointer();
 
-    std::string temp_string2 = substring_generator() + "E5List";
-    answer.push_back(temp_string2);
+    string_generator("E5List");
 
     if (!E5_shtrih()) {
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
-
     go_back();
     return true;
 }
@@ -980,20 +957,19 @@ bool E6_shtrih() {
         numbers.push_back("1");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opand E5";
-        answer.push_back(temp_string);
+        string_generator("opand E5");
 
         if (!E5()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
+
         point = number_pointer;
 
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string1 = substring_generator() + "E6List";
-        answer.push_back(temp_string1);
+        string_generator("E6List");
 
         if (!E6_shtrih()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -1010,8 +986,7 @@ bool E6() {
     numbers.push_back("1");
     new_pointer();
 
-    std::string temp_string = substring_generator() + "E5";
-    answer.push_back(temp_string);
+    string_generator("E5");
 
 
     if (!E5()) {
@@ -1024,8 +999,7 @@ bool E6() {
     numbers.push_back("0");
     new_pointer();
 
-    std::string temp_string1 = substring_generator() + "E6List";
-    answer.push_back(temp_string1);
+    string_generator("E6List");
 
     if (!E6_shtrih()) {
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -1045,8 +1019,7 @@ bool E7_shtrih() {
         numbers.push_back("1");
         new_pointer();
 
-        std::string temp_string = substring_generator() + "opor E6";
-        answer.push_back(temp_string);
+        string_generator("opor E6");
 
         if (!E6()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -1058,8 +1031,7 @@ bool E7_shtrih() {
         numbers.push_back("0");
         new_pointer();
 
-        std::string temp_string1 = substring_generator() + "E7List";
-        answer.push_back(temp_string1);
+        string_generator("E7List");
 
         if (!E7_shtrih()) {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -1076,8 +1048,7 @@ bool E7() {
     numbers.push_back("1");
     new_pointer();
 
-    std::string temp_string = substring_generator() + "E6";
-    answer.push_back(temp_string);
+    string_generator("E6");
 
     if (!E6()){
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
@@ -1089,14 +1060,12 @@ bool E7() {
     numbers.push_back("0");
     new_pointer();
 
-    std::string temp_string1 = substring_generator() + "E7List";
-    answer.push_back(temp_string1);
+    string_generator("E7List");
 
     if (!E7_shtrih()) {
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
-
     go_back();
     return true;
 }
@@ -1106,33 +1075,33 @@ bool E() {
     numbers.push_back("0");
     new_pointer();
 
-    std::string temp_string = substring_generator() + "E7";
-    answer.push_back(temp_string);
+    string_generator("E7");
 
     if (!E7()) {
         answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
-    go_back();
     return true;
 }
 
 int main() {
     Lexem lexem;
+    std::ofstream output;
     lexem = lexer.nextLexem();
     std::string a = lexem.first;
     temp_lexem = lexem.second;
     temp.push_back(a);
     bool A = E();
     output.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\output.txt)");
-    while (!answer.empty()) {
-        output << answer.front() << std::endl;
-        answer.erase(answer.begin());
+    for (auto i = answer.begin(); i != answer.end(); i++){
+        output << *i << std::endl;
     }
     output.close();
-    if (A and temp[pointer] == "end"){
-        std::cout << "Correct expression";
-    } else {
-        std::cout << "Incorrect expression";
-    }
+    streamline.close();
+//    if (A and temp[pointer] == "end"){
+//        std::cout << "Correct expression";
+//    } else {
+//        std::cout << "Incorrect expression";
+//    }
+    return 0;
 }

@@ -17,7 +17,8 @@ private:
     void findLexem(std::vector<Container> graph, Lexem &lexem);
 
 public:
-    Lexer(std::istream& streamline);
+    explicit Lexer(std::istream& streamline);
+    ~Lexer();
     Lexem nextLexem();
 };
 

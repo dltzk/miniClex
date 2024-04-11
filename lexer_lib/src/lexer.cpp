@@ -8,6 +8,7 @@ set<string> keywords = {"int", "float", "string", "char", "if", "else", "for", "
 Lexer::Lexer(std::istream &streamline) : streamline{streamline} {
     cache = streamline.get();
 }
+Lexer::~Lexer(){}
 
 void Lexer::findLexem(vector<Container> graph, Lexem &lexem) {
     Container startedge = {"", false, false, 0, ""};
