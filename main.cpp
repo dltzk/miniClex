@@ -541,7 +541,7 @@ bool ArgList(){
             add_token_next();
 
 
-            numbers.push_back("1");
+            numbers.push_back("0");
             new_pointer();
 
             go_back();
@@ -573,6 +573,7 @@ bool E1_shtrih() {
 
         string_generator("opinc");
 
+        go_back();
     }
     else if (temp[pointer] == "lpar"){
         add_token_next();
@@ -630,6 +631,7 @@ bool E1() {
 
             go_back();
             go_back();
+            go_back();
             return true;
         }
         numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
@@ -644,6 +646,7 @@ bool E1() {
 
         add_token_next();
 
+        go_back();
         go_back();
         return true;
     }
@@ -686,6 +689,7 @@ bool E1() {
             string_generator("rpar");
 
             go_back();
+            go_back();
             return true;
         }
     }
@@ -707,6 +711,7 @@ bool E2() {
             numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
+
 
     } else {
         numbers.push_back("0");
@@ -1037,6 +1042,7 @@ bool E7_shtrih() {
             answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
+
     }
     go_back();
     return true;
