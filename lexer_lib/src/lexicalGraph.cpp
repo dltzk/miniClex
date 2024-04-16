@@ -14,6 +14,7 @@ map<int, vector<Container>> LexemMachine = {
                      {"{", false, false, 1, ""},
                      {"}", false, false, 1, ""},
                      {";", false, false, 1, ""},
+                     {":", false, false, 1, ""},
                      {",", false, false, 1, ""},
                      {".", false, false, 1, ""},
                      {">", false, false, 1, ""},
@@ -34,6 +35,7 @@ map<int, vector<Container>> LexemMachine = {
                      {"default", false, false, -1, "error"}
              }},
         {1, {
+                     {":", true, false, 0, "colon"},
                      {"(", true, false, 0, "lpar"},
                      {")", true, false, 0, "rpar"},
                      {"{", true, false, 0, "lbrace"},

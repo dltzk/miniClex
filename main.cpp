@@ -10,7 +10,7 @@ Lexer lexer(streamline);
 std::vector<std::string> temp = {};
 int pointer = 0;
 std::vector<std::string> numbers = {};
-std::vector<std::string> answer = {"E"};
+std::vector<std::string> answer = {"StmtList"};
 int number_pointer = 0;
 std::string temp_lexem = "";
 bool E();
@@ -55,6 +55,9 @@ bool ArgList();
 void add_token_next();
 void go_back();
 void new_pointer();
+bool Cases();
+bool ACase();
+bool CasesList();
 
 void new_pointer(){
     number_pointer = numbers.size() - 1;
@@ -88,6 +91,80 @@ void string_generator(std::string expression){
 //        temp_string += "L " + expression;
 //    } else { temp_string += "> " + expression; }
     answer.push_back(temp_string);
+}
+
+bool ACase(){
+    if (temp[pointer] == "kwcase") {
+        add_token_next();
+        if (temp[pointer] == "num") {
+            add_token_next();
+            if (temp[pointer] == "colon") {
+                add_token_next();
+                if (!Stmt()) {
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+    if (temp[pointer] == "kwdefault") {
+        add_token_next();
+        if (temp[pointer] == "colon") {
+            add_token_next();
+            if (!Stmt()) {
+                return false;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+bool CasesList(){
+    if (ACase()){
+        if (!CasesList()){
+            return false;
+        }
+        return true;
+    } else{
+        return true;
+    }
+}
+
+bool Cases(){
+    if (!ACase()){
+        return false;
+    }
+    if (!CasesList()) {
+        return false;
+    }
+    return true;
+}
+
+bool SwitchOp(){
+    if (temp[pointer] == "kwswitch"){
+        add_token_next();
+        if (temp[pointer] == "lpar"){
+            add_token_next();
+            if (!E()){
+                return false;
+            }
+            if (temp[pointer] == "rpar"){
+                add_token_next();
+                if (temp[pointer] == "lbrace"){
+                    add_token_next();
+                    if (!Cases()){
+                        return false;
+                    }
+                    if (temp[pointer] == "rbrace"){
+                        add_token_next();
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
 }
 
 bool ElsePart(){
@@ -125,13 +202,42 @@ bool IfOp(){
 
 bool OOp(){
     if (temp[pointer] == "kwout"){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("OOp");
+
         add_token_next();
+
+        numbers.push_back("1");
+        new_pointer();
+
+        string_generator("kwout E");
+
         if (!E()){
             return false;
         }
+
+        go_back();
+
         if (temp[pointer] != "semicolon"){
             return false;
         }
+
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("semicolon");
+
+        go_back();
+
+        go_back();
+
+        go_back();
+
         return true;
     }
     return false;
@@ -139,12 +245,38 @@ bool OOp(){
 
 bool IOp(){
     if (temp[pointer] == "kwin"){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("IOp");
+
+
         add_token_next();
+
+
         if (temp[pointer] == "id"){
+
+            std::string temp_id = temp_lexem;
+
             add_token_next();
+
             if (temp[pointer] != "semicolon"){
                 return false;
             }
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("kwin " + temp_id + " semicolon");
+
+            go_back();
+
+            add_token_next();
+
+            go_back();
+
+            go_back();
             return true;
         }
     }
@@ -246,18 +378,49 @@ bool WhileOp(){
 
 bool AssignOrCallList(){
     if (temp[pointer] == "opassign"){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("opassign E");
+
         add_token_next();
+
         if (!E()){
             return false;
         }
+        go_back();
+
+        go_back();
         return true;
     }
     else if (temp[pointer] == "lpar"){
+
+        numbers.push_back("1");
+        new_pointer();
+
+        string_generator("lpar ParamList");
+
         add_token_next();
+
         if (!ParamList()){
             return false;
         }
-        return true;
+
+        if (temp[pointer] == "rpar"){
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("rpar");
+            add_token_next();
+
+
+            go_back();
+
+            go_back();
+
+            return true;
+        }
     }
     else{
         return false;
@@ -266,23 +429,56 @@ bool AssignOrCallList(){
 
 bool AssignOrCall(){
     if (temp[pointer] == "id"){
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator(temp_lexem + " AssignOrCallList");
         add_token_next();
         if (!AssignOrCallList()){
             return false;
         }
+        go_back();
         return true;
     }
     return false;
 }
 
 bool AssignOrCallOp(){
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("AssignOrCallOp");
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("AssignOrCall");
+
     if (!AssignOrCall()){
+        numbers.pop_back();
+        numbers.pop_back();
+        answer.pop_back();
+        answer.pop_back();
         return false;
     }
+
+
     if (temp[pointer] != "semicolon"){
         return false;
     }
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("semicolon");
+
     add_token_next();
+
+    go_back();
+
+    go_back();
+
+    go_back();
+
     return true;
 }
 
@@ -292,17 +488,32 @@ bool ParamListList(){
     }
 
     if (temp[pointer] == "comma"){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("comma Type");
+
         add_token_next();
+
         if (!Type()){
             return false;
         }
         if (temp[pointer] == "id"){
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator(temp_lexem + " ParamList");
+
             add_token_next();
+
             if (!ParamList()){
                 return false;
             }
         }
     }
+
+    go_back();
     return true;
 }
 
@@ -313,14 +524,31 @@ bool ParamList() {
 
     int temp_point = pointer;
 
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("Type");
+
     if (Type()) {
+
         if (temp[pointer] == "id") {
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator(temp_lexem + " ParamListList");
+
             add_token_next();
             if (!ParamListList()) {
                 return false;
             }
         }
-    } else{ pointer = temp_point;}
+    } else{
+        answer.pop_back();
+        numbers.pop_back();
+        pointer = temp_point;
+    }
+
+    go_back();
     return true;
 }
 
@@ -332,36 +560,76 @@ bool InitVar(){
     if (temp[pointer] == "opassign"){
         add_token_next();
         if (temp[pointer] == "num") {
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("opassign " + temp_lexem);
+
             add_token_next();
+
+            go_back();
+
+            go_back();
+
             return true;
         }
         else if (temp[pointer] == "char"){
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator(temp_lexem);
+
             add_token_next();
+
+            go_back();
+
+            go_back();
+
             return true;
         }
         return false;
     }
+    go_back();
     return true;
 }
 
 bool DeclVarList(){
+
     if (temp[pointer] == "end"){
         return false;
     }
 
     if (temp[pointer] == "comma"){
+
         add_token_next();
+
         if (temp[pointer] == "id"){
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("comma " + temp_lexem + " InitVar");
+
             add_token_next();
+
             if (!InitVar()){
                 return false;
             }
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("DeclVarList");
+
+
             if (!DeclVarList()){
                 return false;
             }
-            return true;
         }
     }
+
+    go_back();
     return true;
 }
 
@@ -370,43 +638,107 @@ bool DeclareStmtList(){
         return false;
     }
 
+
     if (temp[pointer] == "lpar") {
+
         add_token_next();
+
+        numbers.push_back("1");
+        new_pointer();
+
+        string_generator("lpar ParamList");
+
         if (!ParamList()) {
             return false;
         }
+
+
         if (temp[pointer] == "rpar") {
+
             add_token_next();
+
             if (temp[pointer] == "lbrace") {
+                numbers.push_back("1");
+                new_pointer();
+
+                string_generator("rpar lbrace StmtList");
+
                 add_token_next();
+
                 if (!StmtList()) {
                     return false;
                 }
                 if (temp[pointer] == "rbrace") {
+                    numbers.push_back("0");
+                    new_pointer();
+
+                    string_generator("rbrace");
                     add_token_next();
+
+                    go_back();
+
+                    go_back();
                     return true;
                 }
             }
         }
     }
     if (temp[pointer] == "opassign") {
+
         add_token_next();
+
         if (temp[pointer] == "num" or temp[pointer] == "char") {
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("opassign " + temp_lexem + " DeclVarList");
+
             add_token_next();
+
             if (!DeclVarList()) {
                 return false;
             }
+
             if (temp[pointer] == "semicolon") {
+                numbers.push_back("0");
+                new_pointer();
+
+                string_generator("semicolon");
+
+                add_token_next();
+
+                go_back();
+
+                go_back();
+
                 return true;
             }
         }
     }
     else {
+
+        numbers.push_back("1");
+        new_pointer();
+
+        string_generator("DeclVarList");
+
         if (!DeclVarList()){
             return false;
         }
+
         if (temp[pointer] == "semicolon") {
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("semicolon");
+
             add_token_next();
+
+            go_back();
+
+            go_back();
+
             return true;
         }
         return false;
@@ -418,16 +750,39 @@ bool DeclareStmt(){
         return false;
     }
 
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("DeclareStmt");
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("Type");
+
     if (!Type()){
+        numbers.pop_back();
+        numbers.pop_back();
+        answer.pop_back();
+        answer.pop_back();
         return false;
     }
+
     if (temp[pointer] != "id"){
         return false;
     }
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator(temp_lexem + " DeclareStmtList");
+
     add_token_next();
     if (!DeclareStmtList()){
         return false;
     }
+    go_back();
+
+    go_back();
     return true;
 }
 
@@ -438,10 +793,30 @@ bool Type(){
 
     if (temp[pointer] == "kwint"){
         add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("kwint");
+
+        go_back();
+
+        go_back();
+
         return true;
     }
     if (temp[pointer] == "kwchar"){
         add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("kwchar");
+
+        go_back();
+
+        go_back();
+
         return true;
     }
     return false;
@@ -454,12 +829,18 @@ bool Stmt() {
 
     int temp_point = pointer;
 
+    int temp_number = number_pointer;
+
     if (DeclareStmt()){
         return true;
-    } else {pointer = temp_point;}
+    } else {
+        number_pointer = temp_number;
+        pointer = temp_point;}
     if (AssignOrCallOp()){
         return true;
-    } else {pointer = temp_point;}
+    } else {
+        number_pointer = temp_number;
+        pointer = temp_point;}
     if (WhileOp()){
         return true;
     } else {pointer = temp_point;}
@@ -469,24 +850,53 @@ bool Stmt() {
     if (IfOp()){
         return true;
     } else {pointer = temp_point;}
-//    if (SwitchOp()){
-//        return true;
-//    } else {pointer = temp_point;}
+    if (SwitchOp()){
+        return true;
+    } else {pointer = temp_point;}
     if (IOp()){
         return true;
     } else {pointer = temp_point;}
     if (OOp()){
         return true;
     } else {pointer = temp_point;}
+
     if (temp[pointer] == "semicolon"){
         add_token_next();
         return true;
     }
     if (temp[pointer] == "lbrace"){
+
+        numbers.push_back("1");
+        new_pointer();
+
+        string_generator("lbrace");
+
         add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("StmtList");
+
+
         if (StmtList()){
+
+            go_back();
+
             if (temp[pointer] == "rbrace"){
+
+
+                numbers.push_back("0");
+                new_pointer();
+
+                string_generator("rbrace");
+
                 add_token_next();
+
+                go_back();
+
+                go_back();
+
                 return true;
             }
         }
@@ -494,11 +904,32 @@ bool Stmt() {
     }
     if (temp[pointer] == "kwreturn"){
         add_token_next();
+
+        numbers.push_back("1");
+        new_pointer();
+
+        string_generator("kwreturn E");
+
+
         if (!E()){
             return false;
         }
+
+        go_back();
+
+
         if (temp[pointer] == "semicolon") {
             add_token_next();
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("semicolon");
+
+            go_back();
+
+            go_back();
+
             return true;
         }
         return false;
@@ -511,16 +942,28 @@ bool StmtList() {
     if (temp[pointer] == "end"){
         return true;
     }
-
     int temp_point = pointer;
 
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("Stmt");
+
     if (Stmt()){
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("StmtList");
+
         if (!StmtList()){
             return false;
         }
     } else {
+        answer.pop_back();
+        numbers.pop_back();
         pointer = temp_point;
     }
+    go_back();
     return true;
 }
 
@@ -1111,17 +1554,17 @@ int main() {
     std::string a = lexem.first;
     temp_lexem = lexem.second;
     temp.push_back(a);
-    bool A = E();
+    bool A = StmtList();
     output.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\output.txt)");
     for (auto i = answer.begin(); i != answer.end(); i++){
         output << *i << std::endl;
     }
     output.close();
     streamline.close();
-//    if (A and temp[pointer] == "end"){
-//        std::cout << "Correct expression";
-//    } else {
-//        std::cout << "Incorrect expression";
-//    }
+    if (A and temp[pointer] == "end"){
+        std::cout << "Correct expression";
+    } else {
+        std::cout << "Incorrect expression";
+    }
     return 0;
 }

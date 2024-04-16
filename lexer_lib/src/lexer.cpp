@@ -3,7 +3,7 @@
 using namespace std;
 using Lexem = pair<string, string>;
 
-set<string> keywords = {"int", "float", "string", "char", "if", "else", "for", "while", "out", "in", "return"};
+set<string> keywords = {"int", "float", "string", "char", "if", "else", "for", "while", "out", "in", "return", "switch", "default", "case"};
 
 Lexer::Lexer(std::istream &streamline) : streamline{streamline} {
     cache = streamline.get();
