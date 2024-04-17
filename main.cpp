@@ -373,6 +373,7 @@ bool ForLoop(){
         numbers.pop_back();
         answer.pop_back();
         pointer = temp_point;
+        go_back();
         return true;
     }
 }
@@ -385,6 +386,9 @@ bool ForExp(){
 
     string_generator("E");
 
+    int aboba = answer.size() - 1;
+    int aboba_number = numbers.size() - 1;
+
     if (E()){
 
         go_back();
@@ -395,6 +399,10 @@ bool ForExp(){
 
     } else {
 
+        answer.erase(answer.begin() + aboba, answer.end());
+        numbers.erase(numbers.begin() + aboba_number, numbers.end());
+
+        numbers.pop_back();
 
         pointer = temp_point;
 
@@ -670,7 +678,7 @@ bool ParamListList(){
 
     if (temp[pointer] == "comma"){
 
-        numbers.push_back("0");
+        numbers.push_back("1");
         new_pointer();
 
         string_generator("comma Type");
@@ -681,20 +689,20 @@ bool ParamListList(){
             return false;
         }
         if (temp[pointer] == "id"){
-            numbers.push_back("1");
+            numbers.push_back("0");
             new_pointer();
 
-            string_generator(temp_lexem + " ParamList");
+            string_generator(temp_lexem + " ParamListList");
 
             add_token_next();
 
-            if (!ParamList()){
+            if (!ParamListList()){
                 return false;
             }
         }
     }
-
     go_back();
+
     return true;
 }
 
@@ -711,7 +719,6 @@ bool ParamList() {
     string_generator("Type");
 
     if (Type()) {
-
         if (temp[pointer] == "id") {
             numbers.push_back("0");
             new_pointer();
@@ -727,6 +734,7 @@ bool ParamList() {
         answer.pop_back();
         numbers.pop_back();
         pointer = temp_point;
+        go_back();
     }
 
     go_back();
@@ -1253,7 +1261,6 @@ bool E1_shtrih() {
 
 
         } else {
-            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
     }
@@ -1286,7 +1293,6 @@ bool E1() {
             go_back();
             return true;
         }
-        numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
         return false;
     }
     else if (temp[pointer] == "num") {
@@ -1312,7 +1318,6 @@ bool E1() {
         add_token_next();
 
         if (!E1_shtrih()){
-            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
         go_back();
@@ -1327,7 +1332,6 @@ bool E1() {
         string_generator("lpar E");
 
         if (!E()) {
-            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
         go_back();
@@ -1345,7 +1349,6 @@ bool E1() {
             return true;
         }
     }
-    numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
     return false;
 }
 
@@ -1360,7 +1363,6 @@ bool E2() {
         string_generator("opnot E1");
 
         if (!E1()){
-            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
 
@@ -1372,7 +1374,6 @@ bool E2() {
         string_generator("E1");
 
         if (!E1()) {
-            numbers.erase(numbers.begin() + point, numbers.begin() + number_pointer);
             return false;
         }
     }
@@ -1392,7 +1393,6 @@ bool E3_shtrih() {
         string_generator("opmul E2");
 
         if (!E2()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
 
@@ -1404,7 +1404,6 @@ bool E3_shtrih() {
         string_generator("E3List");
 
         if (!E3_shtrih()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
@@ -1421,7 +1420,6 @@ bool E3() {
     string_generator("E2");
 
     if (!E2()) {
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
 
@@ -1433,7 +1431,6 @@ bool E3() {
     string_generator("E3List");
 
     if (!E3_shtrih()){
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
     go_back();
@@ -1452,7 +1449,6 @@ bool E4_shtrih() {
         string_generator("opplus E3");
 
         if (!E3()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
 
@@ -1464,7 +1460,6 @@ bool E4_shtrih() {
         string_generator("E4List");
 
         if (!E4_shtrih()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
@@ -1479,7 +1474,6 @@ bool E4_shtrih() {
         string_generator("opminus E3");
 
         if (!E3()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
         point = number_pointer;
@@ -1490,7 +1484,6 @@ bool E4_shtrih() {
         string_generator("E4List");
 
         if (!E4_shtrih()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
@@ -1507,7 +1500,6 @@ bool E4() {
     string_generator("E3");
 
     if (!E3()) {
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
 
@@ -1519,7 +1511,6 @@ bool E4() {
     string_generator("E4List");
 
     if (!E4_shtrih()){
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
     go_back();
@@ -1538,7 +1529,6 @@ bool E5_shtrih() {
         string_generator("opeq E4");
 
         if (!E4()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
@@ -1553,7 +1543,6 @@ bool E5_shtrih() {
         string_generator("opne E4");
 
         if (!E4()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
@@ -1568,7 +1557,6 @@ bool E5_shtrih() {
         string_generator("oplt E4");
 
         if (!E4()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
@@ -1585,7 +1573,6 @@ bool E5() {
     string_generator("E4");
 
     if (!E4()) {
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
 
@@ -1597,7 +1584,6 @@ bool E5() {
     string_generator("E5List");
 
     if (!E5_shtrih()) {
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
     go_back();
@@ -1617,7 +1603,6 @@ bool E6_shtrih() {
         string_generator("opand E5");
 
         if (!E5()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
 
@@ -1629,7 +1614,6 @@ bool E6_shtrih() {
         string_generator("E6List");
 
         if (!E6_shtrih()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
     }
@@ -1647,7 +1631,6 @@ bool E6() {
 
 
     if (!E5()) {
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
 
@@ -1659,7 +1642,6 @@ bool E6() {
     string_generator("E6List");
 
     if (!E6_shtrih()) {
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
     go_back();
@@ -1679,7 +1661,6 @@ bool E7_shtrih() {
         string_generator("opor E6");
 
         if (!E6()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
 
@@ -1691,7 +1672,6 @@ bool E7_shtrih() {
         string_generator("E7List");
 
         if (!E7_shtrih()) {
-            answer.erase(answer.begin() + point, answer.begin() + number_pointer);
             return false;
         }
 
@@ -1709,7 +1689,6 @@ bool E7() {
     string_generator("E6");
 
     if (!E6()){
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
 
@@ -1721,7 +1700,6 @@ bool E7() {
     string_generator("E7List");
 
     if (!E7_shtrih()) {
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
         return false;
     }
     go_back();
@@ -1737,7 +1715,6 @@ bool E() {
     string_generator("E7");
 
     if (!E7()) {
-        answer.erase(answer.begin() + number_pointer, answer.begin() + number_pointer);
         return false;
     }
 
