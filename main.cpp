@@ -168,35 +168,88 @@ bool SwitchOp(){
 }
 
 bool ElsePart(){
+
     if (temp[pointer] == "kwelse"){
+
         add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("kwelse Stmt");
+
         if (!Stmt()){
             return false;
         }
+
     }
+
+    go_back();
+
     return true;
 }
 
 bool IfOp(){
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("IfOp");
+
     if (temp[pointer] == "kwif"){
+
         add_token_next();
+
         if (temp[pointer] == "lpar"){
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("kwif lpar E");
+
             add_token_next();
+
             if (!E()){
                 return false;
             }
+
+            go_back();
+
+
             if (temp[pointer] == "rpar"){
+
                 add_token_next();
+
+
+                numbers.push_back("1");
+                new_pointer();
+
+                string_generator("rpar Stmt");
+
                 if (!Stmt()){
                     return false;
                 }
+                numbers.push_back("0");
+                new_pointer();
+
+                string_generator("ElsePart");
+
                 if (!ElsePart()){
                     return false;
                 }
+
+                go_back();
+
+                go_back();
+
                 return true;
             }
         }
     }
+    numbers.pop_back();
+
+    answer.pop_back();
+
     return false;
 }
 
@@ -285,19 +338,40 @@ bool IOp(){
 
 bool ForLoop(){
     if (temp[pointer] == "opinc"){
+
         add_token_next();
+
         if (temp[pointer] == "id"){
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("opinc " + temp_lexem);
+
             add_token_next();
+
+            go_back();
+
+            go_back();
+
             return true;
         }
         return false;
     }
 
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("AssignOrCall");
+
     int temp_point = pointer;
     if (AssignOrCall()){
+        go_back();
         return true;
     }
     else {
+        numbers.pop_back();
+        answer.pop_back();
         pointer = temp_point;
         return true;
     }
@@ -305,50 +379,121 @@ bool ForLoop(){
 
 bool ForExp(){
     int temp_point = pointer;
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("E");
+
     if (E()){
+
+        go_back();
+
+        go_back();
+
         return true;
+
     } else {
+
+
         pointer = temp_point;
+
         return true;
     }
 }
 
 bool ForInit(){
     int temp_point = pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("Type");
+
     if (!Type()){
+        numbers.pop_back();
+        answer.pop_back();
         pointer = temp_point;
     }
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("AssignOrCall");
+
     if (AssignOrCall()){
+        go_back();
         return true;
     } else {
+        numbers.pop_back();
+        answer.pop_back();
+        go_back();
         pointer = temp_point;
         return true;
     }
 }
 
 bool ForOp(){
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("ForOp");
+
     if (temp[pointer] == "kwfor"){
         add_token_next();
         if (temp[pointer] == "lpar"){
             add_token_next();
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("kwfor lpar ForInit");
+
             if (!ForInit()){
                 return false;
             }
+
             if (temp[pointer] == "semicolon"){
                 add_token_next();
+
+                numbers.push_back("1");
+                new_pointer();
+
+                string_generator("semicolon ForExp");
+
                 if (!ForExp()){
                     return false;
                 }
+
                 if (temp[pointer] == "semicolon"){
                     add_token_next();
+
+                    numbers.push_back("1");
+                    new_pointer();
+
+                    string_generator("semicolon ForLoop");
+
                     if (!ForLoop()){
                         return false;
                     }
+
                     if (temp[pointer] == "rpar"){
+                        numbers.push_back("0");
+                        new_pointer();
+
+                        string_generator("rpar Stmt");
+
                         add_token_next();
+
                         if (!Stmt()){
                             return false;
                         }
+
+                        go_back();
+
+                        go_back();
+
                         return true;
                     }
 
@@ -356,23 +501,59 @@ bool ForOp(){
             }
         }
     }
+    numbers.pop_back();
+    answer.pop_back();
     return false;
 }
 
 bool WhileOp(){
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("WhileOp");
+
     if (temp[pointer] == "kwwhile"){
+
         add_token_next();
+
         if (temp[pointer] == "lpar"){
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("kwwhile lpar E");
+
             add_token_next();
             if (!E()){
                 return false;
             }
+
+            go_back();
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("rpar");
+
             if (temp[pointer] == "rpar"){
+
                 add_token_next();
+
+                go_back();
+
+                go_back();
+
+                go_back();
+
                 return true;
             }
         }
     }
+    answer.pop_back();
+
+    numbers.pop_back();
+
     return false;
 }
 
@@ -843,7 +1024,9 @@ bool Stmt() {
         pointer = temp_point;}
     if (WhileOp()){
         return true;
-    } else {pointer = temp_point;}
+    } else {
+        number_pointer = temp_number;
+        pointer = temp_point;}
     if (ForOp()){
         return true;
     } else {pointer = temp_point;}
@@ -861,8 +1044,20 @@ bool Stmt() {
     } else {pointer = temp_point;}
 
     if (temp[pointer] == "semicolon"){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("semicolon");
+
         add_token_next();
+
+        go_back();
+
+        go_back();
+
         return true;
+
     }
     if (temp[pointer] == "lbrace"){
 
@@ -1535,15 +1730,17 @@ bool E7() {
 
 bool E() {
     int point = number_pointer;
+    std::cout << number_pointer << std::endl;
     numbers.push_back("0");
     new_pointer();
 
     string_generator("E7");
 
     if (!E7()) {
-        answer.erase(answer.begin() + point, answer.begin() + number_pointer);
+        answer.erase(answer.begin() + number_pointer, answer.begin() + number_pointer);
         return false;
     }
+
     return true;
 }
 
