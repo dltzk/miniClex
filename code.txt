@@ -1,0 +1,1 @@
+switch(a == 5) {case 1: int main(int a, char b) {} case 2: if (a == 5) hui = 5; default: for ( ; ; ) ; }

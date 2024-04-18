@@ -97,23 +97,40 @@ bool ACase(){
     if (temp[pointer] == "kwcase") {
         add_token_next();
         if (temp[pointer] == "num") {
+            std::string temp_num = temp_lexem;
             add_token_next();
             if (temp[pointer] == "colon") {
                 add_token_next();
-                if (!Stmt()) {
+
+                numbers.push_back("0");
+                new_pointer();
+
+                string_generator("kwcase " + temp_num + " colon StmtList");
+
+                if (!StmtList()) {
                     return false;
                 }
+                go_back();
                 return true;
             }
         }
     }
+
     if (temp[pointer] == "kwdefault") {
         add_token_next();
         if (temp[pointer] == "colon") {
             add_token_next();
-            if (!Stmt()) {
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("kwdefault colon StmtList");
+
+            if (!StmtList()) {
                 return false;
             }
+
+            go_back();
             return true;
         }
     }
@@ -121,23 +138,60 @@ bool ACase(){
 }
 
 bool CasesList(){
+
+    int temp_point = number_pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("ACase");
+
     if (ACase()){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("CasesList");
+
         if (!CasesList()){
             return false;
         }
+
+        go_back();
+
         return true;
     } else{
+        numbers.pop_back();
+        answer.pop_back();
+
+        for (int i = 0; i < number_pointer - temp_point + 1; i++){
+            go_back();
+        }
+
         return true;
     }
 }
 
 bool Cases(){
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("ACase");
+
     if (!ACase()){
         return false;
     }
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("CasesList");
+
     if (!CasesList()) {
         return false;
     }
+    go_back();
     return true;
 }
 
@@ -146,18 +200,43 @@ bool SwitchOp(){
         add_token_next();
         if (temp[pointer] == "lpar"){
             add_token_next();
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("kwswitch lpar");
+
             if (!E()){
                 return false;
             }
+            go_back();
+
             if (temp[pointer] == "rpar"){
                 add_token_next();
                 if (temp[pointer] == "lbrace"){
                     add_token_next();
+
+                    numbers.push_back("1");
+                    new_pointer();
+
+                    string_generator("rpar lbrace Cases");
+
                     if (!Cases()){
                         return false;
                     }
+
                     if (temp[pointer] == "rbrace"){
                         add_token_next();
+
+                        numbers.push_back("0");
+                        new_pointer();
+
+                        string_generator("rbrace");
+
+                        go_back();
+
+                        go_back();
+
                         return true;
                     }
                 }
