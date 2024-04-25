@@ -3,8 +3,10 @@
 #include <stack>
 #include <vector>
 #include <iostream>
-using Lexem = std::pair<std::string, std::string>;
+#include "ll.h"
+#include <map>
 
+using Lexem = std::pair<std::string, std::string>;
 std::fstream streamline(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\code.txt)");
 Lexer lexer(streamline);
 std::vector<std::string> temp = {};
@@ -13,6 +15,13 @@ std::vector<std::string> numbers = {};
 std::vector<std::string> answer = {"StmtList"};
 int number_pointer = 0;
 std::string temp_lexem = "";
+std::vector<Atom> AtomsVector = {};
+std::vector<Params> sortedAtomsVector = {};
+int LabelCounter = 0;
+std::map<std::string, std::vector<Params>> AtomsMap = {};
+int AtomsMapCounter = 0;
+int NewVariableCounter = 0;
+
 bool E();
 bool E1();
 bool E2();
@@ -58,6 +67,35 @@ void new_pointer();
 bool Cases();
 bool ACase();
 bool CasesList();
+std::string addVar(std::string name, std::string scope, std::string type, std::string init);
+std::string alloc();
+std::string newLabel();
+
+
+std::string newLabel() {
+    std::string labelMark = std::to_string(LabelCounter++);
+    return labelMark;
+}
+
+std::string alloc(std::string scope) {
+    std::string name = std::to_string(NewVariableCounter++);
+    std::string temp = addVar("$TEMP_" + std::to_string(NewVariableCounter++), scope, "kwint", "0");
+    return temp;
+}
+
+std::string addVar(std::string name, std::string scope, std::string type, std::string init){
+    if (AtomsMap.count(scope)){
+        for (auto &a: AtomsMap[scope]){
+            if (a.name == name){
+                return "error";
+            }
+        }
+    }
+    Params text = {name, scope, type, init, "var", AtomsMapCounter++};
+    AtomsMap[scope].push_back(text);
+    std::string temp = std::to_string(text.number_of_id);
+    return temp;
+}
 
 void new_pointer(){
     number_pointer = numbers.size() - 1;
