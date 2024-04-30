@@ -7,6 +7,9 @@
 #include <map>
 
 using Lexem = std::pair<std::string, std::string>;
+using bd = std::pair<bool, std::string>;
+
+std::ofstream output;
 std::fstream streamline(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\code.txt)");
 Lexer lexer(streamline);
 std::vector<std::string> temp = {};
@@ -15,10 +18,10 @@ std::vector<std::string> numbers = {};
 std::vector<std::string> answer = {"StmtList"};
 int number_pointer = 0;
 std::string temp_lexem = "";
-std::vector<Atom> AtomsVector = {};
-std::vector<Params> sortedAtomsVector = {};
-int LabelCounter = 0;
+std::vector<Atom> Atoms = {};
+std::vector<Params> sortedAtoms = {};
 std::map<std::string, std::vector<Params>> AtomsMap = {};
+int LabelCounter = 0;
 int AtomsMapCounter = 0;
 int NewVariableCounter = 0;
 
@@ -67,10 +70,21 @@ void new_pointer();
 bool Cases();
 bool ACase();
 bool CasesList();
+
 std::string addVar(std::string name, std::string scope, std::string type, std::string init);
+std::string addFunc(std::string name, std::string type, std::string len);
 std::string alloc();
 std::string newLabel();
+std::string checkVar(std::string scope, std::string name);
+void print_tree();
 
+void print_tree(){
+    output.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\output.txt)");
+    for (auto i = answer.begin(); i != answer.end(); i++){
+        output << *i << std::endl;
+    }
+    output.close();
+}
 
 std::string newLabel() {
     std::string labelMark = std::to_string(LabelCounter++);
@@ -83,6 +97,32 @@ std::string alloc(std::string scope) {
     return temp;
 }
 
+std::string checkVar(std::string scope, std::string name){
+    for (auto &a: AtomsMap[scope]){
+        if (a.name == name and a.kind == "var") {
+            std::string temp = std::to_string(a.number_of_id);
+            return temp;
+        } else if (a.name == name and a.kind != "var"){ return "error";}
+    }
+    for (auto &a: AtomsMap["-1"]){
+        if (a.name == name and a.kind == "var") {
+            std::string temp = std::to_string(a.number_of_id);
+            return temp;
+        } else if (a.name == name and a.kind != "var"){ return "error";}
+    }
+    return "error";
+}
+
+std::string checkFunc(std::string name, std::string len){
+    for (auto &a: AtomsMap["-1"]){
+        if (a.name == name and a.kind == "func" and a.init == len) {
+            std::string temp = std::to_string(a.number_of_id);
+            return temp;
+        } else if (a.name == name and a.kind != "func"){ return "error";}
+    }
+    return "error";
+}
+
 std::string addVar(std::string name, std::string scope, std::string type, std::string init){
     if (AtomsMap.count(scope)){
         for (auto &a: AtomsMap[scope]){
@@ -93,6 +133,20 @@ std::string addVar(std::string name, std::string scope, std::string type, std::s
     }
     Params text = {name, scope, type, init, "var", AtomsMapCounter++};
     AtomsMap[scope].push_back(text);
+    std::string temp = std::to_string(text.number_of_id);
+    return temp;
+}
+
+std::string addFunc(std::string name, std::string type, std::string len) {
+    std::string temp_init;
+    for (auto &a: AtomsMap["-1"]) {
+        if (a.name == name) {
+            return "error";
+        }
+    }
+    if (len.size() == 0) {temp_init = "0";} else {temp_init = len;}
+    Params text = {name, "-1", type, temp_init, "func", AtomsMapCounter++};
+    AtomsMap["-1"].push_back(text);
     std::string temp = std::to_string(text.number_of_id);
     return temp;
 }
@@ -1825,7 +1879,6 @@ bool E7() {
 
 bool E() {
     int point = number_pointer;
-    std::cout << number_pointer << std::endl;
     numbers.push_back("0");
     new_pointer();
 
@@ -1840,17 +1893,12 @@ bool E() {
 
 int main() {
     Lexem lexem;
-    std::ofstream output;
     lexem = lexer.nextLexem();
     std::string a = lexem.first;
     temp_lexem = lexem.second;
     temp.push_back(a);
     bool A = StmtList();
-    output.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\output.txt)");
-    for (auto i = answer.begin(); i != answer.end(); i++){
-        output << *i << std::endl;
-    }
-    output.close();
+    print_tree();
     streamline.close();
     if (A and temp[pointer] == "end"){
         std::cout << "Correct expression";
