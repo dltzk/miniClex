@@ -1,1 +1,5 @@
-return 5 == 5;
+int main(){
+    char a = '5', b = '3';
+    int z = 4;
+    return a;
+}
