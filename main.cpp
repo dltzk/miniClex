@@ -45,7 +45,6 @@ bool StmtList();
 bool Stmt();
 bool DeclareStmt();
 bool DeclareStmtList();
-bool AssignOrCallOp();
 bool WhileOp();
 bool ForOp();
 bool IfOp();
