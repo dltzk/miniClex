@@ -52,6 +52,7 @@ bool ElsePart();
 bool SwitchOp();
 bool IOp();
 bool OOp();
+bool OOpList();
 bd Type();
 bd ParamList();
 bd ParamListList();
@@ -93,10 +94,21 @@ void generate_atom(std::string context = "", std::string name = "", std::string 
 }
 
 void print_atoms(){
+    bool incorrect = false;
+
     atoms.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\atoms.txt)");
+
     for (auto i: Atoms){
+//        if (i.context == "error"){
+//            atoms.clear();
+//            atoms << "ERROR" << std::endl;
+//            std::cout << "Incorrect expression" << std::endl;
+//            incorrect = true;
+//            break;
+//        }
         atoms << i.context << ": " << "(" << i.name << "," << i.first << "," << i.second << "," << i.third << ")" << std::endl;
     }
+
     atoms << std::endl;
 
     atoms << "name" << " " << "scope" << " " << "type" << " " << "init" << " " << "kind" << " " << "id" << " " << "len" << std::endl;
@@ -107,6 +119,9 @@ void print_atoms(){
             atoms << j.name << " " << j.scope << " " << j.type << " " << j.init << " " << " " << j.kind << " "
                   << j.number_of_id << " " << j.len << std::endl;
         }
+    }
+    if (!incorrect) {
+        std::cout << "Correct expression" << std::endl;
     }
     atoms.close();
 }
@@ -147,7 +162,7 @@ std::string checkVar(std::string name){
 
 std::string checkFunc(std::string name, std::string len){
     for (auto &a: AtomsMap["-1"]){
-        if (a.name == name and a.kind == "func" and a.init == len) {
+        if (a.name == name and a.kind == "func" and a.len == len) {
             std::string temp = std::to_string(a.number_of_id);
             return temp;
         } else if (a.name == name and a.kind != "func"){ return "error";}
@@ -455,89 +470,118 @@ void string_generator(std::string expression){
 //    return false;
 //}
 //
-//bool OOp(){
-//    if (temp[pointer] == "kwout"){
-//
-//        numbers.push_back("0");
-//        new_pointer();
-//
-//        string_generator("OOp");
-//
-//        add_token_next();
-//
-//        numbers.push_back("1");
-//        new_pointer();
-//
-//        string_generator("kwout E");
-//
-//        if (!E()){
-//            return false;
-//        }
-//
-//        go_back();
-//
-//        if (temp[pointer] != "semicolon"){
-//            return false;
-//        }
-//
-//        add_token_next();
-//
-//        numbers.push_back("0");
-//        new_pointer();
-//
-//        string_generator("semicolon");
-//
-//        go_back();
-//
-//        go_back();
-//
-//        go_back();
-//
-//        return true;
-//    }
-//    return false;
-//}
-//
-//bool IOp(){
-//    if (temp[pointer] == "kwin"){
-//
-//        numbers.push_back("0");
-//        new_pointer();
-//
-//        string_generator("IOp");
-//
-//
-//        add_token_next();
-//
-//
-//        if (temp[pointer] == "id"){
-//
-//            std::string temp_id = temp_lexem;
-//
-//            add_token_next();
-//
-//            if (temp[pointer] != "semicolon"){
-//                return false;
-//            }
-//
-//            numbers.push_back("0");
-//            new_pointer();
-//
-//            string_generator("kwin " + temp_id + " semicolon");
-//
-//            go_back();
-//
-//            add_token_next();
-//
-//            go_back();
-//
-//            go_back();
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-//
+bool OOp(){
+    if (temp[pointer] == "kwout"){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("OOp");
+
+        add_token_next();
+
+        numbers.push_back("1");
+        new_pointer();
+
+        string_generator("kwout OOpList");
+
+        if (!OOpList()){
+            return false;
+        }
+
+        if (temp[pointer] != "semicolon"){
+            return false;
+        }
+
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("semicolon");
+
+        go_back();
+
+        go_back();
+
+        go_back();
+
+        return true;
+    }
+    return false;
+}
+
+bool OOpList(){
+    if (temp[pointer] == "str"){
+        std::string temp = temp_lexem;
+
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("\"" + temp + "\"");
+
+        generate_atom(contexts[contexts.size() - 1], "OUT", "", "", "\"" + temp + "\"");
+
+        go_back();
+    } else {
+        numbers.push_back("0");
+        new_pointer();
+
+        bd E_answer = E();
+        if (!E_answer.first){
+            return false;
+        }
+
+        generate_atom(contexts[contexts.size() - 1], "OUT", "", "", E_answer.second);
+    }
+    go_back();
+    return true;
+}
+
+bool IOp(){
+    if (temp[pointer] == "kwin"){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("IOp");
+
+        add_token_next();
+
+        if (temp[pointer] == "id"){
+
+            std::string temp_id = temp_lexem;
+
+            add_token_next();
+
+            if (temp[pointer] != "semicolon"){
+                return false;
+            }
+
+            auto p = checkVar(temp_id);
+
+            generate_atom(contexts[contexts.size() - 1], "IN", "", "", p);
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("kwin " + temp_id + " semicolon");
+
+            go_back();
+
+            add_token_next();
+
+            go_back();
+
+            go_back();
+            return true;
+        }
+    }
+    return false;
+}
+
 //bool ForLoop(){
 //    if (temp[pointer] == "opinc"){
 //
@@ -767,112 +811,130 @@ void string_generator(std::string expression){
 //    return false;
 //}
 //
-//bool AssignOrCallList(){
-//    if (temp[pointer] == "opassign"){
-//
-//        numbers.push_back("0");
-//        new_pointer();
-//
-//        string_generator("opassign E");
-//
-//        add_token_next();
-//
-//        if (!E()){
-//            return false;
-//        }
-//        go_back();
-//
-//        go_back();
-//        return true;
-//    }
-//    else if (temp[pointer] == "lpar"){
-//
-//        numbers.push_back("1");
-//        new_pointer();
-//
-//        string_generator("lpar ParamList");
-//
-//        add_token_next();
-//
-//        if (!ParamList()){
-//            return false;
-//        }
-//
-//        if (temp[pointer] == "rpar"){
-//            numbers.push_back("0");
-//            new_pointer();
-//
-//            string_generator("rpar");
-//            add_token_next();
-//
-//
-//            go_back();
-//
-//            go_back();
-//
-//            return true;
-//        }
-//    }
-//    else{
-//        return false;
-//    }
-//}
-//
-//bool AssignOrCall(){
-//    if (temp[pointer] == "id"){
-//        numbers.push_back("0");
-//        new_pointer();
-//
-//        string_generator(temp_lexem + " AssignOrCallList");
-//        add_token_next();
-//        if (!AssignOrCallList()){
-//            return false;
-//        }
-//        go_back();
-//        return true;
-//    }
-//    return false;
-//}
-//
-//bool AssignOrCallOp(){
-//    numbers.push_back("0");
-//    new_pointer();
-//
-//    string_generator("AssignOrCallOp");
-//
-//    numbers.push_back("1");
-//    new_pointer();
-//
-//    string_generator("AssignOrCall");
-//
-//    if (!AssignOrCall()){
-//        numbers.pop_back();
-//        numbers.pop_back();
-//        answer.pop_back();
-//        answer.pop_back();
-//        return false;
-//    }
-//
-//
-//    if (temp[pointer] != "semicolon"){
-//        return false;
-//    }
-//    numbers.push_back("0");
-//    new_pointer();
-//
-//    string_generator("semicolon");
-//
-//    add_token_next();
-//
-//    go_back();
-//
-//    go_back();
-//
-//    go_back();
-//
-//    return true;
-//}
-//
+bool AssignOrCallList(std::string p){
+    if (temp[pointer] == "opassign"){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("opassign E");
+
+        add_token_next();
+
+        bd E_answer = E();
+
+        if (!E_answer.first){
+            return false;
+        }
+
+        auto r = checkVar(p);
+
+        generate_atom(contexts[contexts.size() - 1], "MOV", E_answer.second, "", r);
+
+        go_back();
+
+        go_back();
+        return true;
+    }
+    else if (temp[pointer] == "lpar"){
+
+        numbers.push_back("1");
+        new_pointer();
+
+        string_generator("lpar ArgList");
+
+        add_token_next();
+
+        bd ArgList_answer = ArgList();
+
+        if (!ArgList_answer.first){
+            return false;
+        }
+
+        if (temp[pointer] == "rpar"){
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("rpar");
+            add_token_next();
+
+            auto q = checkFunc(p, ArgList_answer.second);
+
+            auto r = alloc(contexts[contexts.size() - 1]);
+
+            generate_atom(contexts[contexts.size() - 1], "CALL", q, "", r);
+
+            go_back();
+
+            go_back();
+
+            return true;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+bool AssignOrCall(){
+    if (temp[pointer] == "id"){
+        std::string temp = temp_lexem;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator(temp + " AssignOrCallList");
+
+        add_token_next();
+
+        if (!AssignOrCallList(temp)){
+            return false;
+        }
+        go_back();
+        return true;
+    }
+    return false;
+}
+
+bool AssignOrCallOp(){
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("AssignOrCallOp");
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("AssignOrCall");
+
+    if (!AssignOrCall()){
+        numbers.pop_back();
+        numbers.pop_back();
+        answer.pop_back();
+        answer.pop_back();
+        return false;
+    }
+
+
+    if (temp[pointer] != "semicolon"){
+        return false;
+    }
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("semicolon");
+
+    add_token_next();
+
+    go_back();
+
+    go_back();
+
+    go_back();
+
+    return true;
+}
+
 bd ParamListList(){
     if (temp[pointer] == "end"){
         return {false, ""};
@@ -1363,11 +1425,11 @@ bool Stmt() {
     } else {
         number_pointer = temp_number;
         pointer = temp_point;}
-//    if (AssignOrCallOp()){
-//        return true;
-//    } else {
-//        number_pointer = temp_number;
-//        pointer = temp_point;}
+    if (AssignOrCallOp()){
+        return true;
+    } else {
+        number_pointer = temp_number;
+        pointer = temp_point;}
 //    if (WhileOp()){
 //        return true;
 //    } else {
@@ -1382,13 +1444,13 @@ bool Stmt() {
 //    if (SwitchOp()){
 //        return true;
 //    } else {pointer = temp_point;}
-//    if (IOp()){
-//        return true;
-//    } else {pointer = temp_point;}
-//    if (OOp()){
-//        return true;
-//    } else {pointer = temp_point;}
-//
+    if (IOp()){
+        return true;
+    } else {pointer = temp_point;}
+    if (OOp()){
+        return true;
+    } else {pointer = temp_point;}
+
     if (temp[pointer] == "semicolon"){
 
         numbers.push_back("0");
@@ -2220,15 +2282,9 @@ int main() {
     std::string a = lexem.first;
     temp_lexem = lexem.second;
     temp.push_back(a);
-    int adasd;
     bool A = StmtList();
     print_tree();
     print_atoms();
     streamline.close();
-    if (A and temp[pointer] == "end" and Atoms.front().name != "error"){
-        std::cout << "Correct expression";
-    } else {
-        std::cout << "Incorrect expression";
-    }
     return 0;
 }
