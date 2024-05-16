@@ -33,7 +33,53 @@ StmtList
   │     ├lpar ParamList
   │     ├rpar lbrace StmtList
   │     │ ├Stmt
-  │     │ │ └semicolon
+  │     │ │ └DeclareStmt
+  │     │ │   ├Type
+  │     │ │   │ └kwint
+  │     │ │   └a DeclareStmtList
+  │     │ │     ├DeclVarList
+  │     │ │     │ ├comma b InitVar
+  │     │ │     │ └DeclVarList
+  │     │ │     └semicolon
   │     │ └StmtList
+  │     │   ├Stmt
+  │     │   │ └IfOp
+  │     │   │   ├kwif lpar E
+  │     │   │   │ └E7
+  │     │   │   │   ├E6
+  │     │   │   │   │ ├E5
+  │     │   │   │   │ │ ├E4
+  │     │   │   │   │ │ │ ├E3
+  │     │   │   │   │ │ │ │ ├E2
+  │     │   │   │   │ │ │ │ │ └E1
+  │     │   │   │   │ │ │ │ │   └a E1List
+  │     │   │   │   │ │ │ │ └E3List
+  │     │   │   │   │ │ │ └E4List
+  │     │   │   │   │ │ └E5List
+  │     │   │   │   │ │   └opge E4
+  │     │   │   │   │ │     ├E3
+  │     │   │   │   │ │     │ ├E2
+  │     │   │   │   │ │     │ │ └E1
+  │     │   │   │   │ │     │ │   └b E1List
+  │     │   │   │   │ │     │ └E3List
+  │     │   │   │   │ │     └E4List
+  │     │   │   │   │ └E6List
+  │     │   │   │   └E7List
+  │     │   │   ├rpar Stmt
+  │     │   │   │ └DeclareStmt
+  │     │   │   │   ├Type
+  │     │   │   │   │ └kwint
+  │     │   │   │   └j DeclareStmtList
+  │     │   │   │     ├opassign 5 DeclVarList
+  │     │   │   │     └semicolon
+  │     │   │   └ElsePart
+  │     │   │     └kwelse Stmt
+  │     │   │       └DeclareStmt
+  │     │   │         ├Type
+  │     │   │         │ └kwint
+  │     │   │         └z DeclareStmtList
+  │     │   │           ├opassign 4 DeclVarList
+  │     │   │           └semicolon
+  │     │   └StmtList
   │     └rbrace
   └StmtList

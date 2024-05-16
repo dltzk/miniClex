@@ -1,8 +1,23 @@
 0: (RET,,,'5')
 0: (RET,,,'0')
+1: (MOV,1,,4)
+1: (GE,2,3,L0)
+1: (MOV,0,,4)
+1: (LBL,,,L0)
+1: (EQ,4,'0',L1)
+1: (MOV,'5',,5)
+1: (JMP,,,L2)
+1: (LBL,,,L1)
+1: (MOV,'4',,6)
+1: (LBL,,,L2)
 1: (RET,,,'0')
 
 name scope type init kind id len
 
 g -1 kwint -  func 0 0
 main -1 kwint -  func 1 0
+a 1 kwint 0  var 2 -
+b 1 kwint 0  var 3 -
+$TEMP_0 1 kwint 0  var 4 -
+j 1 kwint 5  var 5 -
+z 1 kwint 4  var 6 -

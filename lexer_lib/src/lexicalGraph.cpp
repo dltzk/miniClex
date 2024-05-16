@@ -17,9 +17,9 @@ map<int, vector<Container>> LexemMachine = {
                      {":", false, false, 1, ""},
                      {",", false, false, 1, ""},
                      {".", false, false, 1, ""},
-                     {">", false, false, 1, ""},
                      {"*", false, false, 1, ""},
                      {"<", true, false, 2, ""},
+                     {">", true, false, 24, ""},
                      {"!", true, false, 4, ""},
                      {"=", true, false, 6, ""},
                      {"+", true, false, 8, ""},
@@ -43,7 +43,6 @@ map<int, vector<Container>> LexemMachine = {
                      {";", true, false, 0, "semicolon"},
                      {",", true, false, 0, "comma"},
                      {".", true, false, 0, "colon"},
-                     {">", true, false, 0, "opgt"},
                      {"*", true, false, 0, "opmul"},
              }},
         {2, {
@@ -125,5 +124,12 @@ map<int, vector<Container>> LexemMachine = {
         {23, {
                      {"digit", true, true, 23, ""},
                      {"default", false, false, 0, "num"}
-             }}
+             }},
+        {24, {
+                     {"=", false, false, 25, ""},
+                     {"default", false, false, 0, "opgt"}
+        }},
+        {25, {
+                     {"default", true, false, 0, "opge"}
+        }}
 };

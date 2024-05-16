@@ -3,5 +3,9 @@ int g(){
 }
 
 int main(){
-    ;
+    int a, b;
+    if (a >= b)
+    int j = 5;
+    else
+    int z = 4;
 }

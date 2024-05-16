@@ -99,13 +99,13 @@ void print_atoms(){
     atoms.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\atoms.txt)");
 
     for (auto i: Atoms){
-//        if (i.context == "error"){
-//            atoms.clear();
-//            atoms << "ERROR" << std::endl;
-//            std::cout << "Incorrect expression" << std::endl;
-//            incorrect = true;
-//            break;
-//        }
+        if (i.context == "error"){
+            atoms.clear();
+            atoms << "ERROR" << std::endl;
+            std::cout << "Incorrect expression" << std::endl;
+            incorrect = true;
+            break;
+        }
         atoms << i.context << ": " << "(" << i.name << "," << i.first << "," << i.second << "," << i.third << ")" << std::endl;
     }
 
@@ -384,92 +384,104 @@ void string_generator(std::string expression){
 //    return false;
 //}
 //
-//bool ElsePart(){
-//
-//    if (temp[pointer] == "kwelse"){
-//
-//        add_token_next();
-//
-//        numbers.push_back("0");
-//        new_pointer();
-//
-//        string_generator("kwelse Stmt");
-//
-//        if (!Stmt()){
-//            return false;
-//        }
-//
-//    }
-//
-//    go_back();
-//
-//    return true;
-//}
-//
-//bool IfOp(){
-//
-//    numbers.push_back("0");
-//    new_pointer();
-//
-//    string_generator("IfOp");
-//
-//    if (temp[pointer] == "kwif"){
-//
-//        add_token_next();
-//
-//        if (temp[pointer] == "lpar"){
-//
-//            numbers.push_back("1");
-//            new_pointer();
-//
-//            string_generator("kwif lpar E");
-//
-//            add_token_next();
-//
-//            if (!E()){
-//                return false;
-//            }
-//
-//            go_back();
-//
-//
-//            if (temp[pointer] == "rpar"){
-//
-//                add_token_next();
-//
-//
-//                numbers.push_back("1");
-//                new_pointer();
-//
-//                string_generator("rpar Stmt");
-//
-//                if (!Stmt()){
-//                    return false;
-//                }
-//                numbers.push_back("0");
-//                new_pointer();
-//
-//                string_generator("ElsePart");
-//
-//                if (!ElsePart()){
-//                    return false;
-//                }
-//
-//                go_back();
-//
-//                go_back();
-//
-//                return true;
-//            }
-//        }
-//    }
-//    numbers.pop_back();
-//
-//    answer.pop_back();
-//
-//    return false;
-//}
-//
+bool ElsePart(){
+
+    if (temp[pointer] == "kwelse"){
+
+        add_token_next();
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("kwelse Stmt");
+
+        if (!Stmt()){
+            return false;
+        }
+
+    }
+
+    go_back();
+
+    return true;
+}
+
+bool IfOp(){
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("IfOp");
+
+    if (temp[pointer] == "kwif"){
+
+        add_token_next();
+
+        if (temp[pointer] == "lpar"){
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("kwif lpar E");
+
+            add_token_next();
+
+            bd E_answer = E();
+
+            if (!E_answer.first){
+                return false;
+            }
+
+            go_back();
+
+            if (temp[pointer] == "rpar"){
+
+                auto l1 = newLabel();
+
+                generate_atom(contexts[contexts.size() - 1], "EQ", E_answer.second, "'0'", "L" + l1);
+
+                add_token_next();
+
+                numbers.push_back("1");
+                new_pointer();
+
+                string_generator("rpar Stmt");
+
+                if (!Stmt()){
+                    return false;
+                }
+
+                auto l2 = newLabel();
+
+                generate_atom(contexts[contexts.size() - 1], "JMP", "", "", "L" + l2);
+                generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l1);
+
+                numbers.push_back("0");
+                new_pointer();
+
+                string_generator("ElsePart");
+
+                if (!ElsePart()){
+                    return false;
+                }
+
+                generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l2);
+
+                go_back();
+
+                go_back();
+
+                return true;
+            }
+        }
+    }
+    numbers.pop_back();
+
+    answer.pop_back();
+
+    return false;
+}
+
 bool OOp(){
     if (temp[pointer] == "kwout"){
 
@@ -760,57 +772,73 @@ bool IOp(){
 //    return false;
 //}
 //
-//bool WhileOp(){
-//
-//    numbers.push_back("0");
-//    new_pointer();
-//
-//    string_generator("WhileOp");
-//
-//    if (temp[pointer] == "kwwhile"){
-//
-//        add_token_next();
-//
-//        if (temp[pointer] == "lpar"){
-//
-//            numbers.push_back("1");
-//            new_pointer();
-//
-//            string_generator("kwwhile lpar E");
-//
-//            add_token_next();
-//            if (!E()){
-//                return false;
-//            }
-//
-//            go_back();
-//
-//            numbers.push_back("0");
-//            new_pointer();
-//
-//            string_generator("rpar");
-//
-//            if (temp[pointer] == "rpar"){
-//
-//                add_token_next();
-//
-//                go_back();
-//
-//                go_back();
-//
-//                go_back();
-//
-//                return true;
-//            }
-//        }
-//    }
-//    answer.pop_back();
-//
-//    numbers.pop_back();
-//
-//    return false;
-//}
-//
+bool WhileOp(){
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("WhileOp");
+
+    if (temp[pointer] == "kwwhile"){
+
+        auto l1 = newLabel();
+
+        generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l1);
+
+        add_token_next();
+
+        if (temp[pointer] == "lpar"){
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("kwwhile lpar E");
+
+            add_token_next();
+
+            bd E_answer = E();
+
+            if (!E_answer.first){
+                return false;
+            }
+
+            go_back();
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("rpar");
+
+            if (temp[pointer] == "rpar"){
+
+                auto l2 = newLabel();
+
+                generate_atom(contexts[contexts.size() - 1], "EQ", E_answer.second, "'0'", "L" + l2);
+
+                add_token_next();
+
+                if (!Stmt()){
+                    return false;
+                }
+
+                generate_atom(contexts[contexts.size() - 1], "JMP", "", "", "L" + l1);
+                generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l2);
+
+                go_back();
+
+                go_back();
+
+                return true;
+            }
+        }
+    }
+    answer.pop_back();
+
+    numbers.pop_back();
+
+    return false;
+}
+
 bool AssignOrCallList(std::string p){
     if (temp[pointer] == "opassign"){
 
@@ -1430,17 +1458,17 @@ bool Stmt() {
     } else {
         number_pointer = temp_number;
         pointer = temp_point;}
-//    if (WhileOp()){
-//        return true;
-//    } else {
-//        number_pointer = temp_number;
-//        pointer = temp_point;}
+    if (WhileOp()){
+        return true;
+    } else {
+        number_pointer = temp_number;
+        pointer = temp_point;}
 //    if (ForOp()){
 //        return true;
 //    } else {pointer = temp_point;}
-//    if (IfOp()){
-//        return true;
-//    } else {pointer = temp_point;}
+    if (IfOp()){
+        return true;
+    } else {pointer = temp_point;}
 //    if (SwitchOp()){
 //        return true;
 //    } else {pointer = temp_point;}
@@ -2080,6 +2108,31 @@ bd E5_shtrih(std::string id) {
 
         generate_atom(contexts[contexts.size() - 1], "MOV", "1", "", s);
         generate_atom(contexts[contexts.size() - 1], "LT", id, E4_answer.second, "L" + l);
+        generate_atom(contexts[contexts.size() - 1], "MOV", "0", "", s);
+        generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l);
+
+        go_back();
+        return {true, s};
+    } else if (temp[pointer] == "opge"){
+        add_token_next();
+
+        int point = number_pointer;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("opge E4");
+
+        bd E4_answer = E4();
+
+        if (!E4_answer.first) {
+            return {false, ""};
+        }
+        auto s = alloc(contexts[contexts.size() - 1]);
+        auto l = newLabel();
+
+        generate_atom(contexts[contexts.size() - 1], "MOV", "1", "", s);
+        generate_atom(contexts[contexts.size() - 1], "GE", id, E4_answer.second, "L" + l);
         generate_atom(contexts[contexts.size() - 1], "MOV", "0", "", s);
         generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l);
 
