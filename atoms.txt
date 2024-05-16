@@ -1,0 +1,8 @@
+0: (RET,,,'5')
+0: (RET,,,'0')
+1: (RET,,,'0')
+
+name scope type init kind id len
+
+g -1 kwint -  func 0 0
+main -1 kwint -  func 1 0
