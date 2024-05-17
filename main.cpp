@@ -11,7 +11,7 @@ using bd = std::pair<bool, std::string>;
 
 std::ofstream tree;
 std::ofstream atoms;
-std::fstream streamline(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\code.txt)");
+std::fstream streamline(R"(C:\Users\ivukhov\Desktop\miniClex-master\code.txt)");
 Lexer lexer(streamline);
 std::vector<std::string> temp = {};
 int pointer = 0;
@@ -83,7 +83,7 @@ void print_atoms();
 void generate_atom(std::string context, std::string name, std::string first, std::string second, std::string third);
 
 void generate_atom(std::string context = "", std::string name = "", std::string first = "", std::string second = "", std::string third = ""){
-    if (context == "error" or name == "error" or first == "error" or second == "error" or third == "error") {
+    if (context == "error" || name == "error" || first == "error" || second == "error" || third == "error") {
         Atom Atom = {"error", "error", "error", "error", "error"};
         Atoms.push_back(Atom);
         return;
@@ -96,7 +96,7 @@ void generate_atom(std::string context = "", std::string name = "", std::string 
 void print_atoms(){
     bool incorrect = false;
 
-    atoms.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\atoms.txt)");
+    atoms.open(R"(C:\Users\ivukhov\Desktop\miniClex-master\atoms.txt)");
 
     for (auto i: Atoms){
         if (i.context == "error"){
@@ -109,15 +109,41 @@ void print_atoms(){
         atoms << i.context << ": " << "(" << i.name << "," << i.first << "," << i.second << "," << i.third << ")" << std::endl;
     }
 
-    atoms << std::endl;
+    atoms << std::endl << std::endl;
 
     atoms << "name" << " " << "scope" << " " << "type" << " " << "init" << " " << "kind" << " " << "id" << " " << "len" << std::endl;
     atoms << std::endl;
+
+    int max_len = 0;
+
+    for (auto i : AtomsMap) {
+        for (auto j : i.second) {
+            if (j.name.size() > max_len) {
+                max_len = j.name.size();
+            }
+        }
+    }
+
     for (auto i: AtomsMap){
         for (auto j: i.second) {
-
-            atoms << j.name << " " << j.scope << " " << j.type << " " << j.init << " " << " " << j.kind << " "
-                  << j.number_of_id << " " << j.len << std::endl;
+            std::string name = j.name;
+            int len_for_name = max_len - j.name.size() + 1;
+           
+            if (j.scope == "-1") {
+                for (int i = 1; i < len_for_name; i++) {
+                    name.push_back(' ');
+                }
+                atoms << name << " " << j.scope << " " << j.type << " " << j.init << " " << " " << j.kind << " "
+                    << j.number_of_id << " " << j.len << std::endl;
+            }
+            else {
+                for (int i = 0; i < len_for_name; i++) {
+                    name.push_back(' ');
+                }
+                atoms << name << " " << j.scope << " " << j.type << " " << j.init << " " << " " << j.kind << " "
+                    << j.number_of_id << " " << j.len << std::endl;
+            }
+            
         }
     }
     if (!incorrect) {
@@ -127,7 +153,7 @@ void print_atoms(){
 }
 
 void print_tree(){
-    tree.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\tree.txt)");
+    tree.open(R"(C:\Users\ivukhov\Desktop\miniClex-master\tree.txt)");
     for (auto i = answer.begin(); i != answer.end(); i++){
         tree << *i << std::endl;
     }
@@ -150,10 +176,10 @@ std::string checkVar(std::string name){
 
     while (context != contexts.rend()) {
         for (auto &a: AtomsMap[*context]) {
-            if (a.name == name and a.kind == "var") {
+            if (a.name == name && a.kind == "var ") {
                 std::string temp = std::to_string(a.number_of_id);
                 return temp;
-            } else if (a.name == name and a.kind != "var") { return "error"; }
+            } else if (a.name == name && a.kind != "var ") { return "error"; }
         }
         context++;
     }
@@ -162,10 +188,10 @@ std::string checkVar(std::string name){
 
 std::string checkFunc(std::string name, std::string len){
     for (auto &a: AtomsMap["-1"]){
-        if (a.name == name and a.kind == "func" and a.len == len) {
+        if (a.name == name && a.kind == "func" && a.len == len) {
             std::string temp = std::to_string(a.number_of_id);
             return temp;
-        } else if (a.name == name and a.kind != "func"){ return "error";}
+        } else if (a.name == name && a.kind != "func"){ return "error";}
     }
     return "error";
 }
@@ -179,7 +205,7 @@ std::string addVar(std::string name, std::string scope, std::string type, std::s
         }
     }
 
-    Params text = {name, scope, type, init, "var", "-", AtomsMapCounter++};
+    Params text = {name, scope, type, init, "var ", "-", AtomsMapCounter++};
     AtomsMap[scope].push_back(text);
     std::string temp = std::to_string(text.number_of_id);
     return temp;
