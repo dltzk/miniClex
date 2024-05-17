@@ -3,83 +3,152 @@ StmtList
 │ └DeclareStmt
 │   ├Type
 │   │ └kwint
-│   └g DeclareStmtList
+│   └main DeclareStmtList
 │     ├lpar ParamList
 │     ├rpar lbrace StmtList
 │     │ ├Stmt
-│     │ │ ├kwreturn E
-│     │ │ │ └E7
-│     │ │ │   ├E6
-│     │ │ │   │ ├E5
-│     │ │ │   │ │ ├E4
-│     │ │ │   │ │ │ ├E3
-│     │ │ │   │ │ │ │ ├E2
-│     │ │ │   │ │ │ │ │ └E1
-│     │ │ │   │ │ │ │ │   └5
-│     │ │ │   │ │ │ │ └E3List
-│     │ │ │   │ │ │ └E4List
-│     │ │ │   │ │ └E5List
-│     │ │ │   │ └E6List
-│     │ │ │   └E7List
-│     │ │ └semicolon
+│     │ │ └DeclareStmt
+│     │ │   ├Type
+│     │ │   │ └kwint
+│     │ │   └i DeclareStmtList
+│     │ │     ├DeclVarList
+│     │ │     │ ├comma a InitVar
+│     │ │     │ └DeclVarList
+│     │ │     │   ├comma hui InitVar
+│     │ │     │   └DeclVarList
+│     │ │     └semicolon
 │     │ └StmtList
+│     │   ├Stmt
+│     │   │ ├kwswitch lpar
+│     │   │ │ └E7
+│     │   │ │   ├E6
+│     │   │ │   │ ├E5
+│     │   │ │   │ │ ├E4
+│     │   │ │   │ │ │ ├E3
+│     │   │ │   │ │ │ │ ├E2
+│     │   │ │   │ │ │ │ │ └E1
+│     │   │ │   │ │ │ │ │   └a E1List
+│     │   │ │   │ │ │ │ └E3List
+│     │   │ │   │ │ │ └E4List
+│     │   │ │   │ │ └E5List
+│     │   │ │   │ │   └opeq E4
+│     │   │ │   │ │     ├E3
+│     │   │ │   │ │     │ ├E2
+│     │   │ │   │ │     │ │ └E1
+│     │   │ │   │ │     │ │   └5
+│     │   │ │   │ │     │ └E3List
+│     │   │ │   │ │     └E4List
+│     │   │ │   │ │       ├opplus E3
+│     │   │ │   │ │       │ ├E2
+│     │   │ │   │ │       │ │ └E1
+│     │   │ │   │ │       │ │   └4
+│     │   │ │   │ │       │ └E3List
+│     │   │ │   │ │       └E4List
+│     │   │ │   │ └E6List
+│     │   │ │   └E7List
+│     │   │ ├rpar lbrace Cases
+│     │   │ │ ├ACase
+│     │   │ │ │ └kwcase 1 colon StmtList
+│     │   │ │ │   ├Stmt
+│     │   │ │ │   │ ├lbrace
+│     │   │ │ │   │ │ └StmtList
+│     │   │ │ │   │ └rbrace
+│     │   │ │ │   └StmtList
+│     │   │ │ └CasesList
+│     │   │ │   ├ACase
+│     │   │ │   │ └kwcase 2 colon StmtList
+│     │   │ │   │   ├Stmt
+│     │   │ │   │   │ └IfOp
+│     │   │ │   │   │   ├kwif lpar E
+│     │   │ │   │   │   │ └E7
+│     │   │ │   │   │   │   ├E6
+│     │   │ │   │   │   │   │ ├E5
+│     │   │ │   │   │   │   │ │ ├E4
+│     │   │ │   │   │   │   │ │ │ ├E3
+│     │   │ │   │   │   │   │ │ │ │ ├E2
+│     │   │ │   │   │   │   │ │ │ │ │ └E1
+│     │   │ │   │   │   │   │ │ │ │ │   └a E1List
+│     │   │ │   │   │   │   │ │ │ │ └E3List
+│     │   │ │   │   │   │   │ │ │ └E4List
+│     │   │ │   │   │   │   │ │ └E5List
+│     │   │ │   │   │   │   │ │   └opeq E4
+│     │   │ │   │   │   │   │ │     ├E3
+│     │   │ │   │   │   │   │ │     │ ├E2
+│     │   │ │   │   │   │   │ │     │ │ └E1
+│     │   │ │   │   │   │   │ │     │ │   └5
+│     │   │ │   │   │   │   │ │     │ └E3List
+│     │   │ │   │   │   │   │ │     └E4List
+│     │   │ │   │   │   │   │ └E6List
+│     │   │ │   │   │   │   └E7List
+│     │   │ │   │   │   ├rpar Stmt
+│     │   │ │   │   │   │ ├lbrace
+│     │   │ │   │   │   │ │ └StmtList
+│     │   │ │   │   │   │ │   ├Stmt
+│     │   │ │   │   │   │ │   │ └AssignOrCallOp
+│     │   │ │   │   │   │ │   │   ├AssignOrCall
+│     │   │ │   │   │   │ │   │   │ └hui AssignOrCallList
+│     │   │ │   │   │   │ │   │   │   └opassign E
+│     │   │ │   │   │   │ │   │   │     └E7
+│     │   │ │   │   │   │ │   │   │       ├E6
+│     │   │ │   │   │   │ │   │   │       │ ├E5
+│     │   │ │   │   │   │ │   │   │       │ │ ├E4
+│     │   │ │   │   │   │ │   │   │       │ │ │ ├E3
+│     │   │ │   │   │   │ │   │   │       │ │ │ │ ├E2
+│     │   │ │   │   │   │ │   │   │       │ │ │ │ │ └E1
+│     │   │ │   │   │   │ │   │   │       │ │ │ │ │   └5
+│     │   │ │   │   │   │ │   │   │       │ │ │ │ └E3List
+│     │   │ │   │   │   │ │   │   │       │ │ │ └E4List
+│     │   │ │   │   │   │ │   │   │       │ │ └E5List
+│     │   │ │   │   │   │ │   │   │       │ └E6List
+│     │   │ │   │   │   │ │   │   │       └E7List
+│     │   │ │   │   │   │ │   │   └semicolon
+│     │   │ │   │   │   │ │   └StmtList
+│     │   │ │   │   │   │ └rbrace
+│     │   │ │   │   │   └ElsePart
+│     │   │ │   │   │     └kwelse Stmt
+│     │   │ │   │   │       ├lbrace
+│     │   │ │   │   │       │ └StmtList
+│     │   │ │   │   │       │   ├Stmt
+│     │   │ │   │   │       │   │ └AssignOrCallOp
+│     │   │ │   │   │       │   │   ├AssignOrCall
+│     │   │ │   │   │       │   │   │ └hui AssignOrCallList
+│     │   │ │   │   │       │   │   │   └opassign E
+│     │   │ │   │   │       │   │   │     └E7
+│     │   │ │   │   │       │   │   │       ├E6
+│     │   │ │   │   │       │   │   │       │ ├E5
+│     │   │ │   │   │       │   │   │       │ │ ├E4
+│     │   │ │   │   │       │   │   │       │ │ │ ├E3
+│     │   │ │   │   │       │   │   │       │ │ │ │ ├E2
+│     │   │ │   │   │       │   │   │       │ │ │ │ │ └E1
+│     │   │ │   │   │       │   │   │       │ │ │ │ │   └10
+│     │   │ │   │   │       │   │   │       │ │ │ │ └E3List
+│     │   │ │   │   │       │   │   │       │ │ │ └E4List
+│     │   │ │   │   │       │   │   │       │ │ │   ├opplus E3
+│     │   │ │   │   │       │   │   │       │ │ │   │ ├E2
+│     │   │ │   │   │       │   │   │       │ │ │   │ │ └E1
+│     │   │ │   │   │       │   │   │       │ │ │   │ │   └4
+│     │   │ │   │   │       │   │   │       │ │ │   │ └E3List
+│     │   │ │   │   │       │   │   │       │ │ │   └E4List
+│     │   │ │   │   │       │   │   │       │ │ └E5List
+│     │   │ │   │   │       │   │   │       │ └E6List
+│     │   │ │   │   │       │   │   │       └E7List
+│     │   │ │   │   │       │   │   └semicolon
+│     │   │ │   │   │       │   └StmtList
+│     │   │ │   │   │       └rbrace
+│     │   │ │   │   └StmtList
+│     │   │ │   └CasesList
+│     │   │ │     ├ACase
+│     │   │ │     │ └kwdefault colon StmtList
+│     │   │ │     │   ├Stmt
+│     │   │ │     │   │ └ForOp
+│     │   │ │     │   │   ├kwfor lpar ForInit
+│     │   │ │     │   │   ├semicolon ForExp
+│     │   │ │     │   │   ├semicolon ForLoop
+│     │   │ │     │   │   └rpar Stmt
+│     │   │ │     │   │     └semicolon
+│     │   │ │     │   └StmtList
+│     │   │ │     └CasesList
+│     │   │ └rbrace
+│     │   └StmtList
 │     └rbrace
 └StmtList
-  ├Stmt
-  │ └DeclareStmt
-  │   ├Type
-  │   │ └kwint
-  │   └main DeclareStmtList
-  │     ├lpar ParamList
-  │     ├rpar lbrace StmtList
-  │     │ ├Stmt
-  │     │ │ └DeclareStmt
-  │     │ │   ├Type
-  │     │ │   │ └kwint
-  │     │ │   └a DeclareStmtList
-  │     │ │     ├DeclVarList
-  │     │ │     │ ├comma b InitVar
-  │     │ │     │ └DeclVarList
-  │     │ │     └semicolon
-  │     │ └StmtList
-  │     │   ├Stmt
-  │     │   │ └IfOp
-  │     │   │   ├kwif lpar E
-  │     │   │   │ └E7
-  │     │   │   │   ├E6
-  │     │   │   │   │ ├E5
-  │     │   │   │   │ │ ├E4
-  │     │   │   │   │ │ │ ├E3
-  │     │   │   │   │ │ │ │ ├E2
-  │     │   │   │   │ │ │ │ │ └E1
-  │     │   │   │   │ │ │ │ │   └a E1List
-  │     │   │   │   │ │ │ │ └E3List
-  │     │   │   │   │ │ │ └E4List
-  │     │   │   │   │ │ └E5List
-  │     │   │   │   │ │   └opge E4
-  │     │   │   │   │ │     ├E3
-  │     │   │   │   │ │     │ ├E2
-  │     │   │   │   │ │     │ │ └E1
-  │     │   │   │   │ │     │ │   └b E1List
-  │     │   │   │   │ │     │ └E3List
-  │     │   │   │   │ │     └E4List
-  │     │   │   │   │ └E6List
-  │     │   │   │   └E7List
-  │     │   │   ├rpar Stmt
-  │     │   │   │ └DeclareStmt
-  │     │   │   │   ├Type
-  │     │   │   │   │ └kwint
-  │     │   │   │   └j DeclareStmtList
-  │     │   │   │     ├opassign 5 DeclVarList
-  │     │   │   │     └semicolon
-  │     │   │   └ElsePart
-  │     │   │     └kwelse Stmt
-  │     │   │       └DeclareStmt
-  │     │   │         ├Type
-  │     │   │         │ └kwint
-  │     │   │         └z DeclareStmtList
-  │     │   │           ├opassign 4 DeclVarList
-  │     │   │           └semicolon
-  │     │   └StmtList
-  │     └rbrace
-  └StmtList

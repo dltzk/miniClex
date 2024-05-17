@@ -62,15 +62,15 @@ bool AssignOrCall();
 bool AssignOrCallOp();
 bool AssignOrCallList();
 bool ForInit();
-bool ForExp();
+bd ForExp();
 bool ForLoop();
 bd ArgList();
 void add_token_next();
 void go_back();
 void new_pointer();
-bool Cases();
-bool ACase();
-bool CasesList();
+bool Cases(std::string p, std::string end);
+bd ACase(std::string p, std::string end);
+bool CasesList(std::string p, std::string end, std::string def);
 
 std::string addVar(std::string name, std::string scope, std::string type, std::string init);
 std::string addFunc(std::string name, std::string type, std::string len);
@@ -83,7 +83,7 @@ void print_atoms();
 void generate_atom(std::string context, std::string name, std::string first, std::string second, std::string third);
 
 void generate_atom(std::string context = "", std::string name = "", std::string first = "", std::string second = "", std::string third = ""){
-    if (context == "error" or name == "error" or first == "error" or second == "error" or third == "error") {
+    if (context == "error" || name == "error" || first == "error" || second == "error" || third == "error") {
         Atom Atom = {"error", "error", "error", "error", "error"};
         Atoms.push_back(Atom);
         return;
@@ -104,25 +104,58 @@ void print_atoms(){
             atoms << "ERROR" << std::endl;
             std::cout << "Incorrect expression" << std::endl;
             incorrect = true;
-            break;
+            return;
         }
         atoms << i.context << ": " << "(" << i.name << "," << i.first << "," << i.second << "," << i.third << ")" << std::endl;
     }
 
-    atoms << std::endl;
+    atoms << std::endl << std::endl;
 
-    atoms << "name" << " " << "scope" << " " << "type" << " " << "init" << " " << "kind" << " " << "id" << " " << "len" << std::endl;
-    atoms << std::endl;
-    for (auto i: AtomsMap){
-        for (auto j: i.second) {
+    int max_len = 0;
 
-            atoms << j.name << " " << j.scope << " " << j.type << " " << j.init << " " << " " << j.kind << " "
-                  << j.number_of_id << " " << j.len << std::endl;
+    for (auto i : AtomsMap) {
+        for (auto j : i.second) {
+            if (j.name.size() > max_len) {
+                max_len = j.name.size();
+            }
         }
     }
-    if (!incorrect) {
-        std::cout << "Correct expression" << std::endl;
+
+    std::string atoms_name = "name";
+
+    for (int i = 0; i < max_len - 7; i++) {
+        atoms_name.push_back(' ');
     }
+
+    atoms << atoms_name << " " << "scope" << " " << "type" << " " << "init" << " " << "kind" << " " << "id" << " " << "len" << std::endl;
+    atoms << std::endl;
+
+
+    for (auto i: AtomsMap){
+        for (auto j: i.second) {
+            std::string name = j.name;
+            int len_for_name = max_len - j.name.size() + 1;
+
+            if (j.scope == "-1") {
+                for (int i = 1; i < len_for_name; i++) {
+                    name.push_back(' ');
+                }
+                atoms << name << " " << j.scope << " " << j.type << " " << j.init << " " << " " << j.kind << " "
+                      << j.number_of_id << " " << j.len << std::endl;
+            }
+            else {
+                for (int i = 0; i < len_for_name; i++) {
+                    name.push_back(' ');
+                }
+                atoms << name << " " << j.scope << " " << j.type << " " << j.init << " " << " " << j.kind << " "
+                      << j.number_of_id << " " << j.len << std::endl;
+            }
+
+        }
+    }
+    if (!incorrect && temp[pointer] == "end") {
+        std::cout << "Correct expression" << std::endl;
+    } else { std::cout << "Incorrect expression" << std::endl; }
     atoms.close();
 }
 
@@ -150,10 +183,10 @@ std::string checkVar(std::string name){
 
     while (context != contexts.rend()) {
         for (auto &a: AtomsMap[*context]) {
-            if (a.name == name and a.kind == "var") {
+            if (a.name == name && a.kind == "var ") {
                 std::string temp = std::to_string(a.number_of_id);
                 return temp;
-            } else if (a.name == name and a.kind != "var") { return "error"; }
+            } else if (a.name == name && a.kind != "var ") { return "error"; }
         }
         context++;
     }
@@ -162,27 +195,34 @@ std::string checkVar(std::string name){
 
 std::string checkFunc(std::string name, std::string len){
     for (auto &a: AtomsMap["-1"]){
-        if (a.name == name and a.kind == "func" and a.len == len) {
+        if (a.name == name && a.kind == "func" && a.len == len) {
             std::string temp = std::to_string(a.number_of_id);
             return temp;
-        } else if (a.name == name and a.kind != "func"){ return "error";}
+        } else if (a.name == name && a.kind != "func"){ return "error";}
     }
     return "error";
 }
 
-std::string addVar(std::string name, std::string scope, std::string type, std::string init){
-    if (AtomsMap.count(scope)){
-        for (auto &a: AtomsMap[scope]){
-            if (a.name == name){
+std::string addVar(std::string name, std::string scope, std::string type, std::string init) {
+    if (AtomsMap.count(scope)) {
+        for (auto& a : AtomsMap[scope]) {
+            if (a.name == name) {
                 return "error";
             }
         }
     }
-
-    Params text = {name, scope, type, init, "var", "-", AtomsMapCounter++};
-    AtomsMap[scope].push_back(text);
-    std::string temp = std::to_string(text.number_of_id);
-    return temp;
+    if (type == "kwint") {
+        Params text = { name, scope, type + ' ', init, "var ", "-", AtomsMapCounter++};
+        AtomsMap[scope].push_back(text);
+        std::string temp = std::to_string(text.number_of_id);
+        return temp;
+    }
+    else {
+        Params text = { name, scope, type, init, "var ", "-", AtomsMapCounter++ };
+        AtomsMap[scope].push_back(text);
+        std::string temp = std::to_string(text.number_of_id);
+        return temp;
+    }
 }
 
 std::string addFunc(std::string name, std::string type, std::string len) {
@@ -191,10 +231,18 @@ std::string addFunc(std::string name, std::string type, std::string len) {
             return "error";
         }
     }
-    Params text = {name, "-1", type, "-", "func", len, AtomsMapCounter++};
-    AtomsMap["-1"].push_back(text);
-    std::string temp = std::to_string(text.number_of_id);
-    return temp;
+    if (type == "kwint") {
+        Params text = { name, "-1", type + ' ', "-", "func", len, AtomsMapCounter++};
+        AtomsMap["-1"].push_back(text);
+        std::string temp = std::to_string(text.number_of_id);
+        return temp;
+    }
+    else {
+        Params text = { name, "-1", type, "-", "func", len, AtomsMapCounter++ };
+        AtomsMap["-1"].push_back(text);
+        std::string temp = std::to_string(text.number_of_id);
+        return temp;
+    }
 }
 
 void new_pointer(){
@@ -231,159 +279,191 @@ void string_generator(std::string expression){
     answer.push_back(temp_string);
 }
 
-//bool ACase(){
-//    if (temp[pointer] == "kwcase") {
-//        add_token_next();
-//        if (temp[pointer] == "num") {
-//            std::string temp_num = temp_lexem;
-//            add_token_next();
-//            if (temp[pointer] == "colon") {
-//                add_token_next();
-//
-//                numbers.push_back("0");
-//                new_pointer();
-//
-//                string_generator("kwcase " + temp_num + " colon StmtList");
-//
-//                if (!StmtList()) {
-//                    return false;
-//                }
-//                go_back();
-//                return true;
-//            }
-//        }
-//    }
-//
-//    if (temp[pointer] == "kwdefault") {
-//        add_token_next();
-//        if (temp[pointer] == "colon") {
-//            add_token_next();
-//
-//            numbers.push_back("0");
-//            new_pointer();
-//
-//            string_generator("kwdefault colon StmtList");
-//
-//            if (!StmtList()) {
-//                return false;
-//            }
-//
-//            go_back();
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-//
-//bool CasesList(){
-//
-//    int temp_point = number_pointer;
-//
-//    numbers.push_back("1");
-//    new_pointer();
-//
-//    string_generator("ACase");
-//
-//    if (ACase()){
-//
-//        numbers.push_back("0");
-//        new_pointer();
-//
-//        string_generator("CasesList");
-//
-//        if (!CasesList()){
-//            return false;
-//        }
-//
-//        go_back();
-//
-//        return true;
-//    } else{
-//        numbers.pop_back();
-//        answer.pop_back();
-//
-//        for (int i = 0; i < number_pointer - temp_point + 1; i++){
-//            go_back();
-//        }
-//
-//        return true;
-//    }
-//}
-//
-//bool Cases(){
-//
-//    numbers.push_back("1");
-//    new_pointer();
-//
-//    string_generator("ACase");
-//
-//    if (!ACase()){
-//        return false;
-//    }
-//
-//    numbers.push_back("0");
-//    new_pointer();
-//
-//    string_generator("CasesList");
-//
-//    if (!CasesList()) {
-//        return false;
-//    }
-//    go_back();
-//    return true;
-//}
-//
-//bool SwitchOp(){
-//    if (temp[pointer] == "kwswitch"){
-//        add_token_next();
-//        if (temp[pointer] == "lpar"){
-//            add_token_next();
-//
-//            numbers.push_back("1");
-//            new_pointer();
-//
-//            string_generator("kwswitch lpar");
-//
-//            if (!E()){
-//                return false;
-//            }
-//            go_back();
-//
-//            if (temp[pointer] == "rpar"){
-//                add_token_next();
-//                if (temp[pointer] == "lbrace"){
-//                    add_token_next();
-//
-//                    numbers.push_back("1");
-//                    new_pointer();
-//
-//                    string_generator("rpar lbrace Cases");
-//
-//                    if (!Cases()){
-//                        return false;
-//                    }
-//
-//                    if (temp[pointer] == "rbrace"){
-//                        add_token_next();
-//
-//                        numbers.push_back("0");
-//                        new_pointer();
-//
-//                        string_generator("rbrace");
-//
-//                        go_back();
-//
-//                        go_back();
-//
-//                        return true;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    return false;
-//}
-//
+bd ACase(std::string p, std::string end){
+    if (temp[pointer] == "kwcase") {
+
+        auto next = newLabel();
+
+        add_token_next();
+        if (temp[pointer] == "num") {
+            std::string temp_num = temp_lexem;
+
+            add_token_next();
+
+            generate_atom(contexts[contexts.size() - 1], "NE", p, temp_num, next);
+
+            if (temp[pointer] == "colon") {
+                add_token_next();
+
+                numbers.push_back("0");
+                new_pointer();
+
+                string_generator("kwcase " + temp_num + " colon StmtList");
+
+                if (!StmtList()) {
+                    return {false, ""};
+                }
+
+                generate_atom(contexts[contexts.size() - 1], "JMP", "", "", end);
+                generate_atom(contexts[contexts.size() - 1], "LBL", "", "", next);
+
+                go_back();
+                return {true, "-1"};
+            }
+        }
+    }
+
+    if (temp[pointer] == "kwdefault") {
+        auto next = newLabel();
+        auto def = newLabel();
+
+        add_token_next();
+        if (temp[pointer] == "colon") {
+
+            generate_atom(contexts[contexts.size() - 1], "JMP", "", "", next);
+            generate_atom(contexts[contexts.size() - 1], "LBL", "", "", def);
+
+            add_token_next();
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("kwdefault colon StmtList");
+
+            if (!StmtList()) {
+                return {false, ""};
+            }
+
+            generate_atom(contexts[contexts.size() - 1], "JMP", "", "", end);
+            generate_atom(contexts[contexts.size() - 1], "LBL", "", "", next);
+
+            go_back();
+            return {true, def};
+        }
+    }
+    return {false, ""};
+}
+
+bool CasesList(std::string p, std::string end, std::string def){
+
+    int temp_point = number_pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("ACase");
+
+    bd ACase_answer = ACase(p, end);
+
+    if (ACase_answer.first){
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("CasesList");
+
+        if (!CasesList(p, end, ACase_answer.second)){
+            return false;
+        }
+
+        go_back();
+
+        return true;
+    } else{
+
+        numbers.pop_back();
+        answer.pop_back();
+
+        for (int i = 0; i < number_pointer - temp_point + 1; i++){
+            go_back();
+        }
+
+        generate_atom(contexts[contexts.size() - 1], "JMP", "", "", p);
+
+        return true;
+    }
+}
+
+bool Cases(std::string p, std::string end){
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("ACase");
+
+    bd ACase_answer = ACase(p, end);
+
+    if (!ACase_answer.first){
+        return false;
+    }
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("CasesList");
+
+    if (!CasesList(p, end, ACase_answer.second)){
+        return false;
+    }
+    go_back();
+    return true;
+}
+
+bool SwitchOp(){
+    if (temp[pointer] == "kwswitch"){
+        add_token_next();
+        if (temp[pointer] == "lpar"){
+            add_token_next();
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("kwswitch lpar");
+
+            bd E_answer = E();
+
+            if (!E_answer.first){
+                return false;
+            }
+            go_back();
+
+            if (temp[pointer] == "rpar"){
+                add_token_next();
+                if (temp[pointer] == "lbrace"){
+                    add_token_next();
+
+                    numbers.push_back("1");
+                    new_pointer();
+
+                    string_generator("rpar lbrace Cases");
+
+                    auto end = newLabel();
+
+                    if (!Cases(E_answer.second, end)){
+                        return false;
+                    }
+
+                    if (temp[pointer] == "rbrace"){
+                        add_token_next();
+
+                        numbers.push_back("0");
+                        new_pointer();
+
+                        string_generator("rbrace");
+
+                        go_back();
+
+                        go_back();
+
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
 bool ElsePart(){
 
     if (temp[pointer] == "kwelse"){
@@ -594,184 +674,237 @@ bool IOp(){
     return false;
 }
 
-//bool ForLoop(){
-//    if (temp[pointer] == "opinc"){
-//
-//        add_token_next();
-//
-//        if (temp[pointer] == "id"){
-//
-//            numbers.push_back("0");
-//            new_pointer();
-//
-//            string_generator("opinc " + temp_lexem);
-//
-//            add_token_next();
-//
-//            go_back();
-//
-//            go_back();
-//
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    numbers.push_back("1");
-//    new_pointer();
-//
-//    string_generator("AssignOrCall");
-//
-//    int temp_point = pointer;
-//    if (AssignOrCall()){
-//        go_back();
-//        return true;
-//    }
-//    else {
-//        numbers.pop_back();
-//        answer.pop_back();
-//        pointer = temp_point;
-//        go_back();
-//        return true;
-//    }
-//}
-//
-//bool ForExp(){
-//    int temp_point = pointer;
-//
-//    numbers.push_back("0");
-//    new_pointer();
-//
-//    string_generator("E");
-//
-//    int aboba = answer.size() - 1;
-//    int aboba_number = numbers.size() - 1;
-//
-//    if (E()){
-//
-//        go_back();
-//
-//        go_back();
-//
-//        return true;
-//
-//    } else {
-//
-//        answer.erase(answer.begin() + aboba, answer.end());
-//        numbers.erase(numbers.begin() + aboba_number, numbers.end());
-//
-//        numbers.pop_back();
-//
-//        pointer = temp_point;
-//
-//        return true;
-//    }
-//}
-//
-//bool ForInit(){
-//    int temp_point = pointer;
-//
-//    numbers.push_back("1");
-//    new_pointer();
-//
-//    string_generator("Type");
-//
-//    if (!Type()){
-//        numbers.pop_back();
-//        answer.pop_back();
-//        pointer = temp_point;
-//    }
-//
-//    numbers.push_back("0");
-//    new_pointer();
-//
-//    string_generator("AssignOrCall");
-//
-//    if (AssignOrCall()){
-//        go_back();
-//        return true;
-//    } else {
-//        numbers.pop_back();
-//        answer.pop_back();
-//        go_back();
-//        pointer = temp_point;
-//        return true;
-//    }
-//}
-//
-//bool ForOp(){
-//
-//    numbers.push_back("0");
-//    new_pointer();
-//
-//    string_generator("ForOp");
-//
-//    if (temp[pointer] == "kwfor"){
-//        add_token_next();
-//        if (temp[pointer] == "lpar"){
-//            add_token_next();
-//
-//            numbers.push_back("1");
-//            new_pointer();
-//
-//            string_generator("kwfor lpar ForInit");
-//
-//            if (!ForInit()){
-//                return false;
-//            }
-//
-//            if (temp[pointer] == "semicolon"){
-//                add_token_next();
-//
-//                numbers.push_back("1");
-//                new_pointer();
-//
-//                string_generator("semicolon ForExp");
-//
-//                if (!ForExp()){
-//                    return false;
-//                }
-//
-//                if (temp[pointer] == "semicolon"){
-//                    add_token_next();
-//
-//                    numbers.push_back("1");
-//                    new_pointer();
-//
-//                    string_generator("semicolon ForLoop");
-//
-//                    if (!ForLoop()){
-//                        return false;
-//                    }
-//
-//                    if (temp[pointer] == "rpar"){
-//                        numbers.push_back("0");
-//                        new_pointer();
-//
-//                        string_generator("rpar Stmt");
-//
-//                        add_token_next();
-//
-//                        if (!Stmt()){
-//                            return false;
-//                        }
-//
-//                        go_back();
-//
-//                        go_back();
-//
-//                        return true;
-//                    }
-//
-//                }
-//            }
-//        }
-//    }
-//    numbers.pop_back();
-//    answer.pop_back();
-//    return false;
-//}
-//
+bool ForLoop(){
+    if (temp[pointer] == "opinc"){
+
+        add_token_next();
+
+        if (temp[pointer] == "id"){
+
+            numbers.push_back("0");
+            new_pointer();
+
+            string_generator("opinc " + temp_lexem);
+
+            auto p = checkVar(temp_lexem);
+
+            generate_atom(contexts[contexts.size() - 1], "ADD", p, "'1'", p);
+
+            add_token_next();
+
+            go_back();
+
+            go_back();
+
+            return true;
+        }
+        return false;
+    }
+
+    int temp_point = pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("AssignOrCall");
+
+    if (AssignOrCall()){
+        go_back();
+        return true;
+    }
+    else {
+        numbers.pop_back();
+        answer.pop_back();
+        pointer = temp_point;
+        go_back();
+        return true;
+    }
+}
+
+bd ForExp(){
+    int temp_point = pointer;
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("E");
+
+    int aboba = answer.size() - 1;
+    int aboba_number = numbers.size() - 1;
+
+    bd E_answer = E();
+
+    if (E_answer.first){
+
+        go_back();
+
+        go_back();
+
+        return {true, E_answer.second};
+
+    } else {
+
+        answer.erase(answer.begin() + aboba, answer.end());
+        numbers.erase(numbers.begin() + aboba_number, numbers.end());
+
+        numbers.pop_back();
+
+        pointer = temp_point;
+
+        return {true, ""};
+    }
+}
+
+bool ForInit(){
+    int temp_point = pointer;
+
+    numbers.push_back("1");
+    new_pointer();
+
+    string_generator("Type");
+
+    bd Type_answer = Type();
+
+    if (!Type_answer.first){
+        numbers.pop_back();
+        answer.pop_back();
+        pointer = temp_point;
+
+        numbers.push_back("0");
+        new_pointer();
+
+        string_generator("AssignOrCall");
+
+        if (!AssignOrCall()){
+
+            numbers.pop_back();
+            answer.pop_back();
+            go_back();
+            pointer = temp_point;
+            return true;
+
+        }
+        go_back();
+        return true;
+    }
+
+    if (addVar(temp_lexem, contexts[contexts.size() - 1], "kwint", "") == "error") {
+        return false;
+    }
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("AssignOrCall");
+
+    if (AssignOrCall()){
+        go_back();
+        return true;
+    } else {
+        numbers.pop_back();
+        answer.pop_back();
+        go_back();
+        pointer = temp_point;
+        return true;
+    }
+}
+
+bool ForOp(){
+
+    numbers.push_back("0");
+    new_pointer();
+
+    string_generator("ForOp");
+
+    if (temp[pointer] == "kwfor"){
+        auto l1 = newLabel();
+        auto l2 = newLabel();
+        auto l3 = newLabel();
+        auto l4 = newLabel();
+
+        add_token_next();
+        if (temp[pointer] == "lpar"){
+            add_token_next();
+
+            numbers.push_back("1");
+            new_pointer();
+
+            string_generator("kwfor lpar ForInit");
+
+            if (!ForInit()){
+                return false;
+            }
+
+            if (temp[pointer] == "semicolon"){
+
+
+                generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l1);
+
+                add_token_next();
+
+                numbers.push_back("1");
+                new_pointer();
+
+                string_generator("semicolon ForExp");
+
+                bd ForExp_answer = ForExp();
+
+                if (!ForExp_answer.first){
+                    return false;
+                }
+
+                generate_atom(contexts[contexts.size() - 1], "EQ", ForExp_answer.second, "'0'", "L" + l4);
+                generate_atom(contexts[contexts.size() - 1], "JMP", "", "", "L" + l3);
+                generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l2);
+
+                if (temp[pointer] == "semicolon"){
+                    add_token_next();
+
+                    numbers.push_back("1");
+                    new_pointer();
+
+                    string_generator("semicolon ForLoop");
+
+                    if (!ForLoop()){
+                        return false;
+                    }
+
+                    generate_atom(contexts[contexts.size() - 1], "JMP", "", "", "L" + l1);
+
+                    if (temp[pointer] == "rpar"){
+
+                        generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l3);
+
+                        numbers.push_back("0");
+                        new_pointer();
+
+                        string_generator("rpar Stmt");
+
+                        add_token_next();
+
+                        if (!Stmt()){
+                            return false;
+                        }
+
+                        generate_atom(contexts[contexts.size() - 1], "JMP", "", "", "L" + l2);
+                        generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l4);
+
+                        go_back();
+
+                        go_back();
+
+                        return true;
+                    }
+
+                }
+            }
+        }
+    }
+    numbers.pop_back();
+    answer.pop_back();
+    return false;
+}
+
 bool WhileOp(){
 
     numbers.push_back("0");
@@ -1463,15 +1596,15 @@ bool Stmt() {
     } else {
         number_pointer = temp_number;
         pointer = temp_point;}
-//    if (ForOp()){
-//        return true;
-//    } else {pointer = temp_point;}
+    if (ForOp()){
+        return true;
+    } else {pointer = temp_point;}
     if (IfOp()){
         return true;
     } else {pointer = temp_point;}
-//    if (SwitchOp()){
-//        return true;
-//    } else {pointer = temp_point;}
+    if (SwitchOp()){
+        return true;
+    } else {pointer = temp_point;}
     if (IOp()){
         return true;
     } else {pointer = temp_point;}
@@ -2308,7 +2441,7 @@ bd E7() {
 
     if (!E7List_answer.first) {
         return {false, ""};
-    }
+    }\
     go_back();
     return {true, E7List_answer.second};
 }
