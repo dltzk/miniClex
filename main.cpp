@@ -104,15 +104,12 @@ void print_atoms(){
             atoms << "ERROR" << std::endl;
             std::cout << "Incorrect expression" << std::endl;
             incorrect = true;
-            break;
+            return;
         }
         atoms << i.context << ": " << "(" << i.name << "," << i.first << "," << i.second << "," << i.third << ")" << std::endl;
     }
 
     atoms << std::endl << std::endl;
-
-    atoms << "name" << " " << "scope" << " " << "type" << " " << "init" << " " << "kind" << " " << "id" << " " << "len" << std::endl;
-    atoms << std::endl;
 
     int max_len = 0;
 
@@ -123,6 +120,16 @@ void print_atoms(){
             }
         }
     }
+
+    std::string atoms_name = "name";
+
+    for (int i = 0; i < max_len - 7; i++) {
+        atoms_name.push_back(' ');
+    }
+
+    atoms << atoms_name << " " << "scope" << " " << "type" << " " << "init" << " " << "kind" << " " << "id" << " " << "len" << std::endl;
+    atoms << std::endl;
+
 
     for (auto i: AtomsMap){
         for (auto j: i.second) {
@@ -196,19 +203,26 @@ std::string checkFunc(std::string name, std::string len){
     return "error";
 }
 
-std::string addVar(std::string name, std::string scope, std::string type, std::string init){
-    if (AtomsMap.count(scope)){
-        for (auto &a: AtomsMap[scope]){
-            if (a.name == name){
+std::string addVar(std::string name, std::string scope, std::string type, std::string init) {
+    if (AtomsMap.count(scope)) {
+        for (auto& a : AtomsMap[scope]) {
+            if (a.name == name) {
                 return "error";
             }
         }
     }
-
-    Params text = {name, scope, type, init, "var ", "-", AtomsMapCounter++};
-    AtomsMap[scope].push_back(text);
-    std::string temp = std::to_string(text.number_of_id);
-    return temp;
+    if (type == "kwint") {
+        Params text = { name, scope, type + ' ', init, "var ", "-", AtomsMapCounter++};
+        AtomsMap[scope].push_back(text);
+        std::string temp = std::to_string(text.number_of_id);
+        return temp;
+    }
+    else {
+        Params text = { name, scope, type, init, "var ", "-", AtomsMapCounter++ };
+        AtomsMap[scope].push_back(text);
+        std::string temp = std::to_string(text.number_of_id);
+        return temp;
+    }
 }
 
 std::string addFunc(std::string name, std::string type, std::string len) {
@@ -217,10 +231,18 @@ std::string addFunc(std::string name, std::string type, std::string len) {
             return "error";
         }
     }
-    Params text = {name, "-1", type, "-", "func", len, AtomsMapCounter++};
-    AtomsMap["-1"].push_back(text);
-    std::string temp = std::to_string(text.number_of_id);
-    return temp;
+    if (type == "kwint") {
+        Params text = { name, "-1", type + ' ', "-", "func", len, AtomsMapCounter++};
+        AtomsMap["-1"].push_back(text);
+        std::string temp = std::to_string(text.number_of_id);
+        return temp;
+    }
+    else {
+        Params text = { name, "-1", type, "-", "func", len, AtomsMapCounter++ };
+        AtomsMap["-1"].push_back(text);
+        std::string temp = std::to_string(text.number_of_id);
+        return temp;
+    }
 }
 
 void new_pointer(){
@@ -2334,7 +2356,7 @@ bd E7() {
 
     if (!E7List_answer.first) {
         return {false, ""};
-    }
+    }\
     go_back();
     return {true, E7List_answer.second};
 }
