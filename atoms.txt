@@ -1,38 +1,18 @@
-0: (ADD,'5','4',4)
-0: (MOV,1,,5)
-0: (EQ,2,4,L0)
-0: (MOV,0,,5)
+0: (MOV,'0',,3)
 0: (LBL,,,L0)
-0: (NE,5,1,2)
-0: (JMP,,,1)
-0: (LBL,,,2)
-0: (NE,5,2,3)
-0: (MOV,1,,6)
-0: (EQ,2,'5',L4)
-0: (MOV,0,,6)
+0: (MOV,1,,4)
+0: (LT,1,2,L4)
+0: (MOV,0,,4)
 0: (LBL,,,L4)
-0: (EQ,6,'0',L5)
-0: (MOV,'5',,3)
-0: (JMP,,,L6)
-0: (LBL,,,L5)
-0: (ADD,'10','4',7)
-0: (MOV,7,,3)
-0: (LBL,,,L6)
-0: (JMP,,,1)
-0: (LBL,,,3)
-0: (JMP,,,7)
-0: (LBL,,,8)
-0: (LBL,,,L9)
-0: (EQ,,'0',L12)
-0: (JMP,,,L11)
-0: (LBL,,,L10)
-0: (JMP,,,L9)
-0: (LBL,,,L11)
-0: (JMP,,,L10)
-0: (LBL,,,L12)
-0: (JMP,,,1)
-0: (LBL,,,7)
-0: (JMP,,,5)
+0: (EQ,4,'0',L3)
+0: (JMP,,,L2)
+0: (LBL,,,L1)
+0: (ADD,1,2,5)
+0: (MOV,5,,3)
+0: (JMP,,,L0)
+0: (LBL,,,L2)
+0: (JMP,,,L1)
+0: (LBL,,,L3)
 0: (RET,,,'0')
 
 
@@ -41,8 +21,6 @@ name scope type init kind id len
 main    -1 kwint  -  func 0 0
 i        0 kwint  0  var  1 -
 a        0 kwint  0  var  2 -
-hui      0 kwint  0  var  3 -
+b        0 kwint  0  var  3 -
 $TEMP_0  0 kwint  0  var  4 -
 $TEMP_1  0 kwint  0  var  5 -
-$TEMP_2  0 kwint  0  var  6 -
-$TEMP_3  0 kwint  0  var  7 -

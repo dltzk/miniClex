@@ -71,6 +71,7 @@ void new_pointer();
 bool Cases(std::string p, std::string end);
 bd ACase(std::string p, std::string end);
 bool CasesList(std::string p, std::string end, std::string def);
+bool checkIfContainsError(bool A);
 
 std::string addVar(std::string name, std::string scope, std::string type, std::string init);
 std::string addFunc(std::string name, std::string type, std::string len);
@@ -93,19 +94,30 @@ void generate_atom(std::string context = "", std::string name = "", std::string 
     return;
 }
 
+bool checkIfContainsError(bool A){
+    bool semanticError = false;
+    bool lexicalError = false;
+    for (auto i: Atoms){
+        if (i.context == "error"){
+            semanticError = true;
+            std::cout << "Semantic error" << std::endl;
+            return false;
+        }
+    }
+    if (temp[pointer] != "end"){
+        lexicalError = true;
+        std::cout << "Your code containts error" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 void print_atoms(){
     bool incorrect = false;
 
     atoms.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\atoms.txt)");
 
     for (auto i: Atoms){
-        if (i.context == "error"){
-            atoms.clear();
-            atoms << "ERROR" << std::endl;
-            std::cout << "Incorrect expression" << std::endl;
-            incorrect = true;
-            return;
-        }
         atoms << i.context << ": " << "(" << i.name << "," << i.first << "," << i.second << "," << i.third << ")" << std::endl;
     }
 
@@ -153,9 +165,6 @@ void print_atoms(){
 
         }
     }
-    if (!incorrect && temp[pointer] == "end") {
-        std::cout << "Correct expression" << std::endl;
-    } else { std::cout << "Incorrect expression" << std::endl; }
     atoms.close();
 }
 
@@ -2469,8 +2478,11 @@ int main() {
     temp_lexem = lexem.second;
     temp.push_back(a);
     bool A = StmtList();
-    print_tree();
-    print_atoms();
+    if (checkIfContainsError(A)) {
+        print_tree();
+        print_atoms();
+        std::cout << "Correct expr" << std::endl << "Tree is printed" << std::endl << "Atoms are printed" << std::endl;
+    }
     streamline.close();
     return 0;
 }
