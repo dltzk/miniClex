@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\miniClex_run.dir/objects.a
+C:\msys64\ucrt64\bin\ar.exe qc CMakeFiles\miniClex_run.dir/objects.a @CMakeFiles\miniClex_run.dir\objects1.rsp
+C:\msys64\ucrt64\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\miniClex_run.dir/objects.a -Wl,--no-whole-archive -o miniClex_run.exe -Wl,--out-implib,libminiClex_run.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\miniClex_run.dir\linkLibs.rsp

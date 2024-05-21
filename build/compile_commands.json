@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/miniClex_run.dir/includes_CXX.rsp -g -o CMakeFiles\\miniClex_run.dir\\main.cpp.obj -c \"C:\\Users\\Suzuya Juuzou\\VSCodeReps\\miniClex\\main.cpp\"",
+  "file": "C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/main.cpp",
+  "output": "CMakeFiles/miniClex_run.dir/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build/lexer_lib",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/lexer_lib.dir/includes_CXX.rsp -g -std=gnu++20 -o CMakeFiles\\lexer_lib.dir\\src\\lexer.cpp.obj -c \"C:\\Users\\Suzuya Juuzou\\VSCodeReps\\miniClex\\lexer_lib\\src\\lexer.cpp\"",
+  "file": "C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/lexer_lib/src/lexer.cpp",
+  "output": "lexer_lib/CMakeFiles/lexer_lib.dir/src/lexer.cpp.obj"
+},
+{
+  "directory": "C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build/lexer_lib",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/lexer_lib.dir/includes_CXX.rsp -g -std=gnu++20 -o CMakeFiles\\lexer_lib.dir\\src\\lexicalGraph.cpp.obj -c \"C:\\Users\\Suzuya Juuzou\\VSCodeReps\\miniClex\\lexer_lib\\src\\lexicalGraph.cpp\"",
+  "file": "C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/lexer_lib/src/lexicalGraph.cpp",
+  "output": "lexer_lib/CMakeFiles/lexer_lib.dir/src/lexicalGraph.cpp.obj"
+}
+]

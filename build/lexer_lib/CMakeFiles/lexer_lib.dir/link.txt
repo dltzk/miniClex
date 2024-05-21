@@ -1,0 +1,2 @@
+C:\msys64\ucrt64\bin\ar.exe qc liblexer_lib.a CMakeFiles/lexer_lib.dir/src/lexer.cpp.obj CMakeFiles/lexer_lib.dir/src/lexicalGraph.cpp.obj
+C:\msys64\ucrt64\bin\ranlib.exe liblexer_lib.a

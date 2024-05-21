@@ -21,8 +21,6 @@ StmtList
 │     │   ├Stmt
 │     │   │ └ForOp
 │     │   │   ├kwfor lpar ForInit
-│     │   │   │ ├Type
-│     │   │   │ │ └kwint
 │     │   │   │ └AssignOrCall
 │     │   │   │   └b AssignOrCallList
 │     │   │   │     └opassign E

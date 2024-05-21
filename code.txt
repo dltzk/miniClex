@@ -1,6 +1,6 @@
 int main(){
-    int i,a,b;
-    for (int b = 0; i < a; b = i + a){
+    int i , a , b;
+    for (b = 0; i < a; b = i + a){
         ;
     }
 }

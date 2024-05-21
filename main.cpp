@@ -11,7 +11,7 @@ using bd = std::pair<bool, std::string>;
 
 std::ofstream tree;
 std::ofstream atoms;
-std::fstream streamline(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\code.txt)");
+std::fstream streamline(R"(C:\\Users\\Suzuya Juuzou\\VSCodeReps\\miniClex\\code.txt)");
 Lexer lexer(streamline);
 std::vector<std::string> temp = {};
 int pointer = 0;
@@ -115,7 +115,7 @@ bool checkIfContainsError(bool A){
 void print_atoms(){
     bool incorrect = false;
 
-    atoms.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\atoms.txt)");
+    atoms.open(R"(C:\\Users\\Suzuya Juuzou\\VSCodeReps\\miniClex\\atoms.txt)");
 
     for (auto i: Atoms){
         atoms << i.context << ": " << "(" << i.name << "," << i.first << "," << i.second << "," << i.third << ")" << std::endl;
@@ -169,7 +169,7 @@ void print_atoms(){
 }
 
 void print_tree(){
-    tree.open(R"(C:\Users\Juzo Suzuya\CLionProjects\miniClex\tree.txt)");
+    tree.open(R"(C:\\Users\\Suzuya Juuzou\\VSCodeReps\\miniClex\\tree.txt)");
     for (auto i = answer.begin(); i != answer.end(); i++){
         tree << *i << std::endl;
     }

@@ -1,0 +1,6 @@
+C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build/CMakeFiles/miniClex_run.dir
+C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build/CMakeFiles/edit_cache.dir
+C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build/CMakeFiles/rebuild_cache.dir
+C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build/lexer_lib/CMakeFiles/lexer_lib.dir
+C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build/lexer_lib/CMakeFiles/edit_cache.dir
+C:/Users/Suzuya Juuzou/VSCodeReps/miniClex/build/lexer_lib/CMakeFiles/rebuild_cache.dir
