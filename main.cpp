@@ -2256,30 +2256,36 @@ bd E5_shtrih(std::string id) {
         go_back();
         return {true, s};
     } else if (temp[pointer] == "opge"){
-        add_token_next();
 
-        int point = number_pointer;
+        add_token_next(); // Переходим к следующему символу
 
-        numbers.push_back("0");
-        new_pointer();
+        int point = number_pointer; // Временный поинтер(указатель)
 
-        string_generator("opge E4");
+        numbers.push_back("0"); // Пушим номер(функция для вывода дерева)
+        new_pointer(); // Двигаем указатель(перезаписываем)
 
-        bd E4_answer = E4();
+        string_generator("opge E4"); // Создаем "вершину" в дереве
 
-        if (!E4_answer.first) {
+        bd E4_answer = E4(); // Получаем результат работы Expr4. Результат состоит из вида {bool, "str"}, проверяем, является ли первая true.
+
+        if (!E4_answer.first) { // Проверяем, правильно ли "схлопнулся" Expr4
             return {false, ""};
         }
-        auto s = alloc(contexts[contexts.size() - 1]);
-        auto l = newLabel();
+        auto s = alloc(contexts[contexts.size() - 1]); // Создаем временную переменную
+        auto l = newLabel(); // Создаем новую метку
+
+        // Генерируем атомы...
 
         generate_atom(contexts[contexts.size() - 1], "MOV", "1", "", s);
         generate_atom(contexts[contexts.size() - 1], "GE", id, E4_answer.second, "L" + l);
         generate_atom(contexts[contexts.size() - 1], "MOV", "0", "", s);
         generate_atom(contexts[contexts.size() - 1], "LBL", "", "", "L" + l);
 
-        go_back();
-        return {true, s};
+        // Сгенерировали =)
+
+        go_back(); // Возвращаемся на строчку назад(в дереве)
+
+        return {true, s}; // Возвращаем результат {bool, "str"}
     }
     go_back();
     return {true, id};

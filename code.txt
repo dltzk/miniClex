@@ -1,6 +1,12 @@
 int main(){
     int i , a , b;
     for (b = 0; i < a; b = i + a){
+        if (i == 0){
+            i = i + 5;
+            b = b + 5;
+        }
+    }
+    while (a < 5){
         ;
     }
 }
